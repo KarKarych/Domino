@@ -1,8 +1,8 @@
-package ru.vsu.domino;
+package ru.vsu.dominoes;
 
 import org.junit.Test;
 
-public class DominoTest {
+public class DominoesTest {
   @Test
   public void testDomino() {
 
