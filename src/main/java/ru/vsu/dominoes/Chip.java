@@ -48,7 +48,7 @@ public class Chip {
     return side;
   }
 
-  public Game.Sides putOn(Table table){
+  public Game.Sides putOn(Table table) {
     return putOn(table, false);
   }
 

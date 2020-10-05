@@ -5,14 +5,8 @@ import java.util.EmptyStackException;
 import java.util.Stack;
 
 public class Market {
-  private int playerChips;
   private final Stack<Chip> chips;
-
-  public static final class EmptyMarketException extends RuntimeException {
-    public EmptyMarketException() {
-      super();
-    }
-  }
+  private int playerChips;
 
   public Market(int countOfPlayers) {
     this.chips = new Stack<>();
@@ -51,5 +45,11 @@ public class Market {
 
   public int getCountChips() {
     return chips.size();
+  }
+
+  public static final class EmptyMarketException extends RuntimeException {
+    public EmptyMarketException() {
+      super();
+    }
   }
 }

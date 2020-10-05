@@ -12,8 +12,6 @@ public class Table {
     this.players = new Player[countOfPlayers];
     this.chipsOnBoard = new LinkedList<>();
     this.market = new Market(countOfPlayers);
-
-    addPlayersToTable();
   }
 
   public Player[] getPlayers() {
@@ -48,35 +46,6 @@ public class Table {
 
   public int getCountChips() {
     return chipsOnBoard.size();
-  }
-
-  private void addPlayersToTable() {
-    String name;
-    for (int i = 0; i < players.length; ++i) {
-      boolean nameExist;
-
-      do {
-        System.out.println("Player " + (i + 1));
-        System.out.println("Enter your name: ");
-        name = Game.getInput().nextLine().trim();
-        nameExist = true;
-
-        int k = i;
-        while (nameExist && k > 0) {
-          Player player = players[--k];
-          if (player.getName().equals(name)) {
-            nameExist = false;
-          }
-        }
-
-        if (!nameExist) {
-          System.out.println("This name has already been chosen by another player. Please choose another one.");
-        }
-      } while (name.isEmpty() || !nameExist);
-
-      players[i] = new Player(name, this);
-      market.handOutChips(players[i]);
-    }
   }
 
   @Override
