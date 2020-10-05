@@ -14,6 +14,12 @@ public class Table {
     this.market = new Market(countOfPlayers);
   }
 
+  public void setPlayer(int index, Player player) {
+    if (index >= 0 && index < players.length) {
+      players[index] = player;
+    }
+  }
+
   public Player[] getPlayers() {
     return players;
   }

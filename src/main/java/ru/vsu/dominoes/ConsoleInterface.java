@@ -138,6 +138,38 @@ public class ConsoleInterface {
     return move;
   }
 
+  private void addPlayersToTable() {
+    Player[] players = table.getPlayers();
+    Market market = table.getMarket();
+
+    String name;
+    for (int i = 0; i < players.length; ++i) {
+      boolean nameExist;
+
+      do {
+        System.out.println("Player " + (i + 1));
+        System.out.println("Enter your name: ");
+        name = INPUT.nextLine().trim();
+        nameExist = true;
+
+        int k = i;
+        while (nameExist && k > 0) {
+          Player player = players[--k];
+          if (player.getName().equals(name)) {
+            nameExist = false;
+          }
+        }
+
+        if (!nameExist) {
+          System.out.println("This name has already been chosen by another player. Please choose another one.");
+        }
+      } while (name.isEmpty() || !nameExist);
+
+      table.setPlayer(i, new Player(name, table));
+      market.handOutChips(players[i]);
+    }
+  }
+
   public Game startGame() {
     int op = 0;
 
@@ -174,37 +206,5 @@ public class ConsoleInterface {
 
     System.out.println("\nGoodbye!");
     return null;
-  }
-
-  private void addPlayersToTable() {
-    Player[] players = table.getPlayers();
-    Market market = table.getMarket();
-
-    String name;
-    for (int i = 0; i < players.length; ++i) {
-      boolean nameExist;
-
-      do {
-        System.out.println("Player " + (i + 1));
-        System.out.println("Enter your name: ");
-        name = INPUT.nextLine().trim();
-        nameExist = true;
-
-        int k = i;
-        while (nameExist && k > 0) {
-          Player player = players[--k];
-          if (player.getName().equals(name)) {
-            nameExist = false;
-          }
-        }
-
-        if (!nameExist) {
-          System.out.println("This name has already been chosen by another player. Please choose another one.");
-        }
-      } while (name.isEmpty() || !nameExist);
-
-      players[i] = new Player(name, table);
-      market.handOutChips(players[i]);
-    }
   }
 }
