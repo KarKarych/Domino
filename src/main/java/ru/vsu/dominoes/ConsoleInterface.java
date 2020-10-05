@@ -13,7 +13,7 @@ public class ConsoleInterface {
     if (game != null) {
       table = game.getTable();
       addPlayersToTable();
-      introducePlayers();
+      play();
     }
   }
 
@@ -34,7 +34,7 @@ public class ConsoleInterface {
     return chips.get(i);
   }
 
-  private void introducePlayers() {
+  private void play() {
     int countPlayers = table.getPlayers().length;
     int[] scores = new int[countPlayers];
 
@@ -127,24 +127,14 @@ public class ConsoleInterface {
   }
 
   private Game.Moves chooseMove(boolean canPut) {
-    Game.Moves move;
+    Game.Moves move = game.chooseMove(canPut);
 
     System.out.print("You can ");
-
-    if (canPut) {
-      System.out.print("put a chip.");
-      move = Game.Moves.PUT;
-    } else {
-      if (table.getMarket().getCountChips() == 0) {
-        System.out.print("to pass the turn.");
-        move = Game.Moves.PASS;
-      } else {
-        System.out.print("take a chip from the market.");
-        move = Game.Moves.GRAB;
-      }
+    switch (move) {
+      case PUT -> System.out.print("put a chip.\n");
+      case GRAB -> System.out.print("to pass the turn.\n");
+      case PASS -> System.out.print("take a chip from the market.\n");
     }
-    System.out.println();
-
     return move;
   }
 

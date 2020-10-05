@@ -78,6 +78,22 @@ public class Game {
     return player.getCountChips() == 0;
   }
 
+  public Moves chooseMove(boolean canPut) {
+    Moves move;
+
+    if (canPut) {
+      move = Game.Moves.PUT;
+    } else {
+      if (table.getMarket().getCountChips() == 0) {
+        move = Game.Moves.PASS;
+      } else {
+        move = Game.Moves.GRAB;
+      }
+    }
+
+    return move;
+  }
+
   public enum Sides {NONE, LEFT, RIGHT}
 
   public enum Moves {PUT, GRAB, PASS}
