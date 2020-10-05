@@ -56,8 +56,8 @@ public class Table {
       boolean nameExist;
 
       do {
-        System.out.println("Игрок " + (i + 1));
-        System.out.println("Введите своё имя: ");
+        System.out.println("Player " + (i + 1));
+        System.out.println("Enter your name: ");
         name = Game.getInput().nextLine().trim();
         nameExist = true;
 
@@ -70,7 +70,7 @@ public class Table {
         }
 
         if (!nameExist) {
-          System.out.println("Это имя уже выбрал другой игрок. Выберите другое.");
+          System.out.println("This name has already been chosen by another player. Please choose another one.");
         }
       } while (name.isEmpty() || !nameExist);
 

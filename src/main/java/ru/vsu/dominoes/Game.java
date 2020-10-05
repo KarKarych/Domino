@@ -25,13 +25,13 @@ public class Game {
     int countPlayers = 0;
     do {
       try {
-        System.out.print("Сколько игроков будут играть? [2-4]: ");
+        System.out.print("How many players will play? [2-4]: ");
         countPlayers = Integer.parseInt(INPUT.nextLine());
         if (countPlayers < 2 || countPlayers > 4) {
-          System.out.println("Количество игроков должно быть от 2 до 4.");
+          System.out.println("The number of players must be from 2 to 4.");
         }
       } catch (NumberFormatException e) {
-        System.out.println("Действительный номер не введён.");
+        System.out.println("A valid number was not entered.");
       }
     } while (countPlayers < 2 || countPlayers > 4);
 
@@ -45,37 +45,37 @@ public class Game {
       player = table.getPlayers()[i];
       playableChips = player.getAvailableChips();
 
-      System.out.println("* * * СТОЛ * * *");
+      System.out.println("* * * * * * * * * * * * TABLE * * * * * * * * * * * *");
       System.out.println(table);
-      System.out.println("\nФишки в куче: " + table.getMarket().getCountChips());
-      System.out.println("\nНастала очередь " + player.getName());
+      System.out.println("\nChips in the market: " + table.getMarket().getCountChips());
+      System.out.println("\nIt's your turn " + player.getName());
       System.out.println(player);
-      System.out.println("\nВы можете играть с:\n" + playableChips + "\n");
+      System.out.println("\nYou can play with:\n" + playableChips + "\n");
 
       switch (chooseMove(playableChips.size() > 0)) {
         case PUT:
           Chip chosenChip = putChip(playableChips);
-          System.out.println("Вы положили фишку " + chosenChip + ".");
+          System.out.println("You put down a chip " + chosenChip + ".");
           player.addChipOnTable(chosenChip, chosenChip.putOn(table, true));
           break;
         case GRAB:
           Chip chipFromMarket = player.getChipFromMarket();
           Sides whereCanPut = chipFromMarket.putOn(table, false);
 
-          System.out.println("Из рынка вы взяли фишку " + chipFromMarket + ".");
+          System.out.println("You took a chip " + chipFromMarket + " from the market.");
 
           if (!whereCanPut.equals(Sides.NONE)) {
-            System.out.println("Вы положили фишку " + chipFromMarket + ".");
+            System.out.println("You put down a chip " + chipFromMarket + ".");
             chipFromMarket.putOn(table, true);
             player.addChipOnTable(chipFromMarket, whereCanPut);
           } else {
-            System.out.println("Данную фишку нельзя положить на стол.");
+            System.out.println("This chip cannot be placed on the table.");
           }
           break;
         case PASS:
           break;
       }
-      System.out.print("\nНажмите Enter, чтобы перейти к следующему ходу.");
+      System.out.print("\nPress Enter to go to the next move.");
       INPUT.nextLine();
       System.out.println();
 
@@ -85,61 +85,61 @@ public class Game {
     } while (!isEnd() && !isPlayerEmpty(player));
 
 
-    System.out.println("\n\n* * * ИГРА ОКОНЧЕНА * * *\nСТОЛ:\n" + table);
+    System.out.println("\n\n* * * THE GAME IS OVER * * *\nTABLE:\n" + table);
     for (i = 0; i < countPlayers; ++i) {
       int n = table.getPlayers()[i].getCountChips();
       if (n > 0) {
         System.out.println("\n" + table.getPlayers()[i].getName()
-                + " остался с " + n
-                + " фишками(ой): \n" + table.getPlayers()[i]);
+                + " stayed with " + n
+                + " chip(s): \n" + table.getPlayers()[i]);
       }
 
       if (!isPlayerEmpty(player) && isEnd()) {
         scores[i] = calculateScore(table.getPlayers()[i]);
-        System.out.println("Очки: " + scores[i]);
+        System.out.println("Score: " + scores[i]);
       }
     }
 
     if (isPlayerEmpty(player)) {
-      System.out.println("\n" + player.getName() + " победил.\n\nПОЗДРАВЛЯЕМ, ВЫ ПОБЕДИЛИ!!");
+      System.out.println("\n" + player.getName() + " won.\n\nCONGRATULATIONS, YOU HAVE WON!!");
     } else {
       System.out.println("\n");
       List<Player> winners = getWinners();
 
       if (winners.size() == 1) {
-        System.out.print(winners.get(0).getName() + " набрал наименьшее количество очков.\n\nПОЗДРАВЛЯЕМ, ВЫ ПОБЕДИЛИ!!");
+        System.out.print(winners.get(0).getName() + " scored the least amount of points.\n\nCONGRATULATIONS, YOU HAVE WON!!");
       } else {
         for (int k = 0; k < winners.size(); ++k) {
           System.out.print(winners.get(k).getName());
           if (k == winners.size() - 2) {
-            System.out.println(" и ");
+            System.out.println(" and ");
           } else {
             if (k < winners.size() - 2) {
               System.out.println(", ");
             }
           }
         }
-        System.out.println(" набрали наименьшее количество очков.\n\nПОЗДРАВЛЯЕМ ВСЕХ!!");
+        System.out.println(" scored the lowest number of points.\n\nCONGRATULATIONS TO ALL!!");
       }
     }
 
-    System.out.println("\n\nСпасибо за игру!\n");
+    System.out.println("\n\nThank you for playing!\n");
   }
 
   private Moves chooseMove(boolean canPut) {
     Moves move;
 
-    System.out.print("Можете ");
+    System.out.print("You can ");
 
     if (canPut) {
-      System.out.print("поставить фишку.");
+      System.out.print("put a chip.");
       move = Moves.PUT;
     } else {
       if (table.getMarket().getCountChips() == 0) {
-        System.out.print("пропустить ход.");
+        System.out.print("to pass the turn.");
         move = Moves.PASS;
       } else {
-        System.out.print("взять фишку из рынка.");
+        System.out.print("take a chip from the market.");
         move = Moves.GRAB;
       }
     }
@@ -154,7 +154,7 @@ public class Game {
     if (chips.size() > 1) {
       do {
         try {
-          System.out.print("\nКакую из фишек, которой вы можете играть, вы хотите поставить? [1 - " + chips.size() + "]: ");
+          System.out.print("\nWhich of the chips you can play do you want to put? [1 - " + chips.size() + "]: ");
           i = Integer.parseInt(INPUT.nextLine()) - 1;
         } catch (NumberFormatException exc) {
           i = 404;
@@ -232,17 +232,17 @@ public class Game {
   public void startGame() {
     int op = 0;
 
-    System.out.println("- * - Добро пожаловать в консольную игру Домино - * -");
+    System.out.println("- * - Welcome to the Domino console game - * -");
 
     do {
       try {
-        System.out.println("\nВыберите, что вы хотите сделать:\n[1] Играть\n[2] Выйти");
+        System.out.println("\nChoose what you want to do:\n[1] Play\n[2] Exit");
         op = Integer.parseInt(INPUT.nextLine());
         if (op != 1 && op != 2) {
-          System.out.println("Выбранный вариант должен быть равен 1 или 2.");
+          System.out.println("\nThe selected option must be 1 or 2.");
         }
       } catch (NumberFormatException e) {
-        System.out.println("Действительный номер не введён.");
+        System.out.println("\nA valid number was not entered.");
       }
     } while (op < 1 || op > 2);
 
@@ -250,6 +250,6 @@ public class Game {
       introducePlayers();
     }
 
-    System.out.println("\nДо свидания!");
+    System.out.println("\nGoodbye!");
   }
 }
