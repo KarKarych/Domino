@@ -1,4 +1,6 @@
-package ru.vsu.dominoes;
+package ru.vsu.dominoes.model;
+
+import ru.vsu.dominoes.enums.Sides;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,7 @@ public class Player {
   public Player(String name, Table table) {
     this.name = name;
     this.table = table;
-    this.ownChips = new ArrayList<>(21); //Нельзя иметь больше 21 фишки
+    this.ownChips = new ArrayList<>(21);
   }
 
   public String getName() {
@@ -30,9 +32,9 @@ public class Player {
     return ownChips.size();
   }
 
-  /*public void removeChip(Chip chip) {
+  public void removeChip(Chip chip) {
     ownChips.remove(chip);
-  }*/
+  }
 
   public Chip getChipFromMarket() {
     Chip chip;
@@ -50,7 +52,7 @@ public class Player {
 
     if (table.getLeftChip() != null) {
       for (Chip chip : ownChips) {
-        if (!chip.putOn(table).equals(Game.Sides.NONE)) {
+        if (!chip.putOn(table, false).equals(Sides.NONE)) {
           chips.add(chip);
         }
       }
@@ -61,7 +63,7 @@ public class Player {
     return chips;
   }
 
-  public void addChipOnTable(Chip chip, Game.Sides side) {
+  public void addChipOnTable(Chip chip, Sides side) {
     switch (side) {
       case LEFT -> {
         table.addChipToLeftSide(chip);
@@ -77,8 +79,8 @@ public class Player {
   @Override
   public String toString() {
     StringBuilder stringBuilder = new StringBuilder();
-    for (Chip f : ownChips) {
-      stringBuilder.append(f);
+    for (Chip chip : ownChips) {
+      stringBuilder.append(chip);
     }
 
     return stringBuilder.toString();

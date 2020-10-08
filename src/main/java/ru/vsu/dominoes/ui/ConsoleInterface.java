@@ -1,4 +1,11 @@
-package ru.vsu.dominoes;
+package ru.vsu.dominoes.ui;
+
+import ru.vsu.dominoes.enums.Moves;
+import ru.vsu.dominoes.enums.Sides;
+import ru.vsu.dominoes.model.Chip;
+import ru.vsu.dominoes.model.Game;
+import ru.vsu.dominoes.model.Player;
+import ru.vsu.dominoes.model.Table;
 
 import java.util.List;
 import java.util.Scanner;
@@ -8,11 +15,13 @@ public class ConsoleInterface {
   private final Game game;
   private Table table;
 
-  ConsoleInterface() {
-    game = startGame();
-    if (game != null) {
-      table = game.getTable();
-      addPlayersToTable();
+  public ConsoleInterface() {
+    int countPlayers = getCountOfPlayersFromUser();
+    String[] namesOfPlayers = getNamesOfPlayersFromUser(countPlayers);
+    this.game = new Game(countPlayers, namesOfPlayers);
+
+    if (countPlayers != 0) {
+      this.table = game.getTable();
       play();
     }
   }
@@ -32,6 +41,18 @@ public class ConsoleInterface {
     }
 
     return chips.get(i);
+  }
+
+  private Moves chooseMove(boolean canPut) {
+    Moves move = game.chooseMove(canPut);
+
+    System.out.print("You can ");
+    switch (move) {
+      case PUT -> System.out.print("put a chip.\n");
+      case GRAB -> System.out.print("to pass the turn.\n");
+      case PASS -> System.out.print("take a chip from the market.\n");
+    }
+    return move;
   }
 
   private void play() {
@@ -60,11 +81,11 @@ public class ConsoleInterface {
           break;
         case GRAB:
           Chip chipFromMarket = player.getChipFromMarket();
-          Game.Sides whereCanPut = chipFromMarket.putOn(table, false);
+          Sides whereCanPut = chipFromMarket.putOn(table, false);
 
           System.out.println("You took a chip " + chipFromMarket + " from the market.");
 
-          if (!whereCanPut.equals(Game.Sides.NONE)) {
+          if (!whereCanPut.equals(Sides.NONE)) {
             System.out.println("You put down a chip " + chipFromMarket + ".");
             chipFromMarket.putOn(table, true);
             player.addChipOnTable(chipFromMarket, whereCanPut);
@@ -126,68 +147,52 @@ public class ConsoleInterface {
     System.out.println("\n\nThank you for playing!\n");
   }
 
-  private Game.Moves chooseMove(boolean canPut) {
-    Game.Moves move = game.chooseMove(canPut);
-
-    System.out.print("You can ");
-    switch (move) {
-      case PUT -> System.out.print("put a chip.\n");
-      case GRAB -> System.out.print("to pass the turn.\n");
-      case PASS -> System.out.print("take a chip from the market.\n");
-    }
-    return move;
-  }
-
-  private void addPlayersToTable() {
-    Player[] players = table.getPlayers();
-    Market market = table.getMarket();
-
-    String name;
-    for (int i = 0; i < players.length; ++i) {
+  public String[] getNamesOfPlayersFromUser(int countPlayers) {
+    String[] namesOfPlayers = new String[countPlayers];
+    for (int i = 0; i < countPlayers; ++i) {
       boolean nameExist;
 
       do {
         System.out.println("Player " + (i + 1));
         System.out.println("Enter your name: ");
-        name = INPUT.nextLine().trim();
+        namesOfPlayers[i] = INPUT.nextLine().trim();
         nameExist = true;
 
-        int k = i;
-        while (nameExist && k > 0) {
-          Player player = players[--k];
-          if (player.getName().equals(name)) {
+        for (int k = i - 1; k >= 0; k--) {
+          if (namesOfPlayers[k].equals(namesOfPlayers[i])) {
             nameExist = false;
+            break;
           }
         }
 
         if (!nameExist) {
           System.out.println("This name has already been chosen by another player. Please choose another one.");
         }
-      } while (name.isEmpty() || !nameExist);
+      } while (namesOfPlayers[i].isEmpty() || !nameExist);
 
-      table.setPlayer(i, new Player(name, table));
-      market.handOutChips(players[i]);
     }
+
+    return namesOfPlayers;
   }
 
-  public Game startGame() {
-    int op = 0;
+  public int getCountOfPlayersFromUser() {
+    int choice = 0;
 
     System.out.println("- * - Welcome to the Domino console game - * -");
 
     do {
       try {
         System.out.println("\nChoose what you want to do:\n[1] Play\n[2] Exit");
-        op = Integer.parseInt(INPUT.nextLine());
-        if (op != 1 && op != 2) {
+        choice = Integer.parseInt(INPUT.nextLine());
+        if (choice != 1 && choice != 2) {
           System.out.println("\nThe selected option must be 1 or 2.");
         }
       } catch (NumberFormatException e) {
         System.out.println("\nA valid number was not entered.");
       }
-    } while (op < 1 || op > 2);
+    } while (choice < 1 || choice > 2);
 
-    if (op == 1) {
+    if (choice == 1) {
       int countPlayers = 0;
       do {
         try {
@@ -201,10 +206,10 @@ public class ConsoleInterface {
         }
       } while (countPlayers < 2 || countPlayers > 4);
 
-      return new Game(countPlayers);
+      return countPlayers;
     }
 
     System.out.println("\nGoodbye!");
-    return null;
+    return 0;
   }
 }

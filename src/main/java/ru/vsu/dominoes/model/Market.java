@@ -1,4 +1,4 @@
-package ru.vsu.dominoes;
+package ru.vsu.dominoes.model;
 
 import java.util.Collections;
 import java.util.EmptyStackException;

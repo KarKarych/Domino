@@ -1,4 +1,6 @@
-package ru.vsu.dominoes;
+package ru.vsu.dominoes.model;
+
+import ru.vsu.dominoes.enums.Sides;
 
 public class Chip {
   private int number1;
@@ -17,47 +19,43 @@ public class Chip {
     return number2;
   }
 
-  public Game.Sides putOn(Table table, boolean turn) {
-    Game.Sides side;
+  public Sides putOn(Table table, boolean isTurnNeed) {
+    Sides side;
 
     boolean isLeftChipNull = table.getLeftChip() == null;
     int left = isLeftChipNull ? 404 : table.getLeftChip().number1;
     int right = isLeftChipNull ? 404 : table.getRightChip().number2;
 
     if (isLeftChipNull) {
-      side = Game.Sides.LEFT;
+      side = Sides.LEFT;
     } else {
       boolean isLeftSideChipMatch = left == number1 || left == number2;
       boolean isRightSideChipMatch = right == number1 || right == number2;
 
       if (isLeftSideChipMatch) {
-        side = Game.Sides.LEFT;
-        if (turn) {
+        side = Sides.LEFT;
+        if (isTurnNeed) {
           turnChip(table, side);
         }
       } else if (isRightSideChipMatch) {
-        side = Game.Sides.RIGHT;
-        if (turn) {
+        side = Sides.RIGHT;
+        if (isTurnNeed) {
           turnChip(table, side);
         }
       } else {
-        side = Game.Sides.NONE;
+        side = Sides.NONE;
       }
     }
 
     return side;
   }
 
-  public Game.Sides putOn(Table table) {
-    return putOn(table, false);
-  }
-
-  private void turnChip(Table table, Game.Sides side) {
+  private void turnChip(Table table, Sides side) {
     int leftSideChip = table.getLeftChip().number1;
     int rightSideChip = table.getRightChip().number2;
 
-    if ((side.equals(Game.Sides.LEFT) && (leftSideChip == number1)) ||
-            (side.equals(Game.Sides.RIGHT) && rightSideChip == number2)) {
+    if ((side.equals(Sides.LEFT) && (leftSideChip == number1)) ||
+            (side.equals(Sides.RIGHT) && rightSideChip == number2)) {
       int temp = number1;
       number1 = number2;
       number2 = temp;

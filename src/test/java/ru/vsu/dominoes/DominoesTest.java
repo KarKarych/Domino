@@ -1,6 +1,10 @@
 package ru.vsu.dominoes;
 
 import org.junit.Test;
+import ru.vsu.dominoes.model.Chip;
+import ru.vsu.dominoes.model.Market;
+import ru.vsu.dominoes.model.Player;
+import ru.vsu.dominoes.model.Table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +17,6 @@ public class DominoesTest {
   Table table;
   Market market;
   Chip chip;
-  Game game;
 
   @Test
   public void testChip() {
