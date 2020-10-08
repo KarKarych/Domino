@@ -26,7 +26,7 @@ public class ConsoleInterface {
     }
   }
 
-  private static Chip putChip(List<Chip> chips) {
+  private Chip putChip(List<Chip> chips) {
     int i = 0;
 
     if (chips.size() > 1) {
