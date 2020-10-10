@@ -1,20 +1,37 @@
 package ru.vsu.dominoes.model;
 
 import ru.vsu.dominoes.enums.Moves;
+import ru.vsu.dominoes.model.players.AIPlayer;
+import ru.vsu.dominoes.model.players.HumanPlayer;
+import ru.vsu.dominoes.model.players.Player;
+import ru.vsu.dominoes.utils.Names;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class Game {
   private final Table table;
 
-  public Game(int countPlayers, String[] namesOfPlayers) {
-    this.table = new Table(countPlayers);
+  public Game(int[] countPlayers, String[] namesOfPlayers) {
+    this.table = new Table(countPlayers[0] + countPlayers[1]);
     Player[] players = table.getPlayers();
     Market market = table.getMarket();
 
+    List<Integer> names = new LinkedList<>();
     for (int i = 0; i < players.length; ++i) {
-      table.setPlayer(i, new Player(namesOfPlayers[i], table));
+      if (i < countPlayers[0]) {
+        table.setPlayer(i, new HumanPlayer(namesOfPlayers[i], table));
+      } else {
+        int index;
+        do {
+          index = new Random().nextInt(Names.NAMES.length - 1);
+        } while (names.contains(index));
+        names.add(index);
+
+        table.setPlayer(i, new AIPlayer(Names.NAMES[index], table));
+      }
       market.handOutChips(players[i]);
     }
   }
@@ -98,7 +115,6 @@ public class Game {
 
     return move;
   }
-
 
   public Table getTable() {
     return table;

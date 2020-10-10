@@ -1,5 +1,7 @@
 package ru.vsu.dominoes.model;
 
+import ru.vsu.dominoes.model.players.Player;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,10 +10,10 @@ public class Table {
   private final List<Chip> chipsOnBoard;
   private final Market market;
 
-  public Table(int countOfPlayers) {
-    this.players = new Player[countOfPlayers];
+  public Table(int countPlayers) {
+    this.players = new Player[countPlayers];
     this.chipsOnBoard = new LinkedList<>();
-    this.market = new Market(countOfPlayers);
+    this.market = new Market(countPlayers);
   }
 
   public void setPlayer(int index, Player player) {

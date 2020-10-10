@@ -1,11 +1,14 @@
-package ru.vsu.dominoes.model;
+package ru.vsu.dominoes.model.players;
 
 import ru.vsu.dominoes.enums.Sides;
+import ru.vsu.dominoes.model.Chip;
+import ru.vsu.dominoes.model.Market;
+import ru.vsu.dominoes.model.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player {
+public abstract class Player {
   private final String name;
   private final List<Chip> ownChips;
   private final Table table;

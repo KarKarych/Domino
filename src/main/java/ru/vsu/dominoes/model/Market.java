@@ -1,5 +1,7 @@
 package ru.vsu.dominoes.model;
 
+import ru.vsu.dominoes.model.players.Player;
+
 import java.util.Collections;
 import java.util.EmptyStackException;
 import java.util.Stack;

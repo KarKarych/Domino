@@ -4,43 +4,27 @@ import ru.vsu.dominoes.enums.Moves;
 import ru.vsu.dominoes.enums.Sides;
 import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.Game;
-import ru.vsu.dominoes.model.Player;
 import ru.vsu.dominoes.model.Table;
+import ru.vsu.dominoes.model.players.AIPlayer;
+import ru.vsu.dominoes.model.players.HumanPlayer;
+import ru.vsu.dominoes.model.players.Player;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleInterface {
-  private static final Scanner INPUT = new Scanner(System.in);
-  private final Game game;
+  public static final Scanner INPUT = new Scanner(System.in);
+  private Game game;
   private Table table;
 
   public ConsoleInterface() {
-    int countPlayers = getCountOfPlayersFromUser();
-    String[] namesOfPlayers = getNamesOfPlayersFromUser(countPlayers);
-    this.game = new Game(countPlayers, namesOfPlayers);
-
-    if (countPlayers != 0) {
+    int[] countPlayers = getCountOfPlayersFromUser();
+    if (countPlayers != null) {
+      String[] namesOfPlayers = getNamesOfPlayersFromUser(countPlayers[0]);
+      this.game = new Game(countPlayers, namesOfPlayers);
       this.table = game.getTable();
       play();
     }
-  }
-
-  private Chip putChip(List<Chip> chips) {
-    int i = 0;
-
-    if (chips.size() > 1) {
-      do {
-        try {
-          System.out.print("\nWhich of the chips you can play do you want to put? [1 - " + chips.size() + "]: ");
-          i = Integer.parseInt(INPUT.nextLine()) - 1;
-        } catch (NumberFormatException exc) {
-          i = 404;
-        }
-      } while (i < 0 || i >= chips.size());
-    }
-
-    return chips.get(i);
   }
 
   private Moves chooseMove(boolean canPut) {
@@ -55,47 +39,81 @@ public class ConsoleInterface {
     return move;
   }
 
+  private void makeMoveHuman(HumanPlayer player, List<Chip> playableChips) {
+    System.out.println("\nYou can play with:\n" + playableChips + "\n");
+
+    switch (chooseMove(playableChips.size() > 0)) {
+      case PUT:
+        Chip chosenChip = player.putChip(playableChips);
+        System.out.println("You put down a chip " + chosenChip + ".");
+        player.addChipOnTable(chosenChip, chosenChip.putOn(table, true));
+        break;
+      case GRAB:
+        Chip chipFromMarket = player.getChipFromMarket();
+        Sides whereCanPut = chipFromMarket.putOn(table, false);
+
+        System.out.println("You took a chip " + chipFromMarket + " from the market.");
+
+        if (!whereCanPut.equals(Sides.NONE)) {
+          System.out.println("You put down a chip " + chipFromMarket + ".");
+          chipFromMarket.putOn(table, true);
+          player.addChipOnTable(chipFromMarket, whereCanPut);
+        } else {
+          System.out.println("This chip cannot be placed on the table.");
+        }
+        break;
+      case PASS:
+        break;
+    }
+  }
+
+  private void makeMoveAI(AIPlayer player, List<Chip> playableChips) {
+    System.out.println("\n" + player.getName() + " can play with:\n" + playableChips + "\n");
+
+    switch (chooseMove(playableChips.size() > 0)) {
+      case PUT:
+        Chip chosenChip = player.putChip(playableChips);
+        System.out.println(player.getName() + " put down a chip " + chosenChip + ".");
+        player.addChipOnTable(chosenChip, chosenChip.putOn(table, true));
+        break;
+      case GRAB:
+        Chip chipFromMarket = player.getChipFromMarket();
+        Sides whereCanPut = chipFromMarket.putOn(table, false);
+
+        System.out.println(player.getName() + " took a chip " + chipFromMarket + " from the market.");
+
+        if (!whereCanPut.equals(Sides.NONE)) {
+          System.out.println(player.getName() + " put down a chip " + chipFromMarket + ".");
+          chipFromMarket.putOn(table, true);
+          player.addChipOnTable(chipFromMarket, whereCanPut);
+        } else {
+          System.out.println("This chip cannot be placed on the table.");
+        }
+        break;
+      case PASS:
+        break;
+    }
+  }
+
   private void play() {
     int countPlayers = table.getPlayers().length;
-    int[] scores = new int[countPlayers];
-
     int i = 0;
-    List<Chip> playableChips;
     Player player;
     do {
       player = table.getPlayers()[i];
-      playableChips = player.getAvailableChips();
-
+      List<Chip> playableChips = player.getAvailableChips();
       System.out.println("* * * * * * * * * * * * TABLE * * * * * * * * * * * *");
       System.out.println(table);
       System.out.println("\nChips in the market: " + table.getMarket().getCountChips());
       System.out.println("\nIt's your turn " + player.getName());
       System.out.println(player);
-      System.out.println("\nYou can play with:\n" + playableChips + "\n");
 
-      switch (chooseMove(playableChips.size() > 0)) {
-        case PUT:
-          Chip chosenChip = putChip(playableChips);
-          System.out.println("You put down a chip " + chosenChip + ".");
-          player.addChipOnTable(chosenChip, chosenChip.putOn(table, true));
-          break;
-        case GRAB:
-          Chip chipFromMarket = player.getChipFromMarket();
-          Sides whereCanPut = chipFromMarket.putOn(table, false);
-
-          System.out.println("You took a chip " + chipFromMarket + " from the market.");
-
-          if (!whereCanPut.equals(Sides.NONE)) {
-            System.out.println("You put down a chip " + chipFromMarket + ".");
-            chipFromMarket.putOn(table, true);
-            player.addChipOnTable(chipFromMarket, whereCanPut);
-          } else {
-            System.out.println("This chip cannot be placed on the table.");
-          }
-          break;
-        case PASS:
-          break;
+      if (player instanceof HumanPlayer) {
+        makeMoveHuman((HumanPlayer) player, playableChips);
+      } else {
+        makeMoveAI((AIPlayer) player, playableChips);
       }
+
       System.out.print("\nPress Enter to go to the next move.");
       INPUT.nextLine();
       System.out.println();
@@ -105,7 +123,7 @@ public class ConsoleInterface {
       }
     } while (!game.isEnd() && !game.isPlayerEmpty(player));
 
-
+    int[] scores = new int[countPlayers];
     System.out.println("\n\n* * * THE GAME IS OVER * * *\nTABLE:\n" + table);
     for (i = 0; i < countPlayers; ++i) {
       int n = table.getPlayers()[i].getCountChips();
@@ -133,10 +151,10 @@ public class ConsoleInterface {
         for (int k = 0; k < winners.size(); ++k) {
           System.out.print(winners.get(k).getName());
           if (k == winners.size() - 2) {
-            System.out.println(" and ");
+            System.out.print(" and ");
           } else {
             if (k < winners.size() - 2) {
-              System.out.println(", ");
+              System.out.print(", ");
             }
           }
         }
@@ -175,7 +193,7 @@ public class ConsoleInterface {
     return namesOfPlayers;
   }
 
-  public int getCountOfPlayersFromUser() {
+  public int[] getCountOfPlayersFromUser() {
     int choice = 0;
 
     System.out.println("- * - Welcome to the Domino console game - * -");
@@ -193,23 +211,29 @@ public class ConsoleInterface {
     } while (choice < 1 || choice > 2);
 
     if (choice == 1) {
-      int countPlayers = 0;
+      int[] countPlayers = new int[2];
       do {
         try {
-          System.out.print("How many players will play? [2-4]: ");
-          countPlayers = Integer.parseInt(INPUT.nextLine());
-          if (countPlayers < 2 || countPlayers > 4) {
-            System.out.println("The number of players must be from 2 to 4.");
+          System.out.print("\nHow many human and ai players will play? [2-4 total]: ");
+          String[] tempPlayers = INPUT.nextLine().split("[ ,]");
+          countPlayers[0] = Integer.parseInt(tempPlayers[0]);
+          countPlayers[1] = Integer.parseInt(tempPlayers[1]);
+          if ((countPlayers[0] >= 2 && countPlayers[1] <= 2 ||
+                  countPlayers[0] <= 2 && countPlayers[1] >= 2 ||
+                  countPlayers[0] >= 1 && countPlayers[1] >= 1) &&
+                  countPlayers[0] + countPlayers[1] <= 4 &&
+                  countPlayers[0] >= 0 && countPlayers[1] >= 0 && countPlayers[0] <= 4 && countPlayers[1] <= 4) {
+            break;
           }
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
           System.out.println("A valid number was not entered.");
         }
-      } while (countPlayers < 2 || countPlayers > 4);
-
+      } while (true);
+      System.out.println(countPlayers[0] + " " + countPlayers[1]);
       return countPlayers;
     }
 
     System.out.println("\nGoodbye!");
-    return 0;
+    return null;
   }
 }
