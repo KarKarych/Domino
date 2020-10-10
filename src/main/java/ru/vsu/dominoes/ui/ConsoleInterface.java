@@ -1,13 +1,8 @@
 package ru.vsu.dominoes.ui;
 
-import ru.vsu.dominoes.enums.Moves;
-import ru.vsu.dominoes.enums.Sides;
-import ru.vsu.dominoes.model.Chip;
-import ru.vsu.dominoes.model.Game;
-import ru.vsu.dominoes.model.Table;
-import ru.vsu.dominoes.model.players.AIPlayer;
-import ru.vsu.dominoes.model.players.HumanPlayer;
-import ru.vsu.dominoes.model.players.Player;
+import ru.vsu.dominoes.enums.*;
+import ru.vsu.dominoes.model.*;
+import ru.vsu.dominoes.model.players.*;
 
 import java.util.List;
 import java.util.Scanner;

@@ -12,7 +12,10 @@ public class AIPlayer extends Player {
   }
 
   public Chip putChip(List<Chip> chips) {
-    if (chips.size() == 1) return chips.get(0);
+    if (chips.size() == 1) {
+      return chips.get(0);
+    }
+
     return chips.get(new Random().nextInt(chips.size() - 1));
   }
 }

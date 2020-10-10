@@ -3,8 +3,9 @@ package ru.vsu.dominoes;
 import org.junit.Test;
 import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.Market;
-import ru.vsu.dominoes.model.Player;
 import ru.vsu.dominoes.model.Table;
+import ru.vsu.dominoes.model.players.HumanPlayer;
+import ru.vsu.dominoes.model.players.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class DominoesTest {
 
   @Test
   public void testPlayer() {
-    player = new Player("Vasya", new Table(2));
+    player = new HumanPlayer("Vasya", new Table(2));
     chip = new Chip(1, 6);
     player.addChip(chip);
     List<Chip> chips = new ArrayList<>();
