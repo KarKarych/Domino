@@ -34,7 +34,7 @@ public class GameCreator {
     }
   }
 
-  public Player[] initialisePlayers(int[] countPlayers, String[] namesOfPlayers) {
+  private Player[] initialisePlayers(int[] countPlayers, String[] namesOfPlayers) {
     Player[] players = new Player[countPlayers[0] + countPlayers[1]];
     List<Integer> names = new LinkedList<>();
     for (int i = 0; i < players.length; ++i) {

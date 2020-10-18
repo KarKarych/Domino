@@ -1,6 +1,6 @@
 package ru.vsu.dominoes.ui;
 
-import ru.vsu.dominoes.enums.*;
+import ru.vsu.dominoes.model.enums.*;
 import ru.vsu.dominoes.model.*;
 import ru.vsu.dominoes.model.strategies.RandomStrategy;
 import ru.vsu.dominoes.model.players.*;

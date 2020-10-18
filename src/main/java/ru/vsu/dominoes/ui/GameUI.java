@@ -1,6 +1,6 @@
 package ru.vsu.dominoes.ui;
 
-import ru.vsu.dominoes.enums.Moves;
+import ru.vsu.dominoes.model.enums.Moves;
 import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.players.AIPlayer;
 import ru.vsu.dominoes.model.players.HumanPlayer;

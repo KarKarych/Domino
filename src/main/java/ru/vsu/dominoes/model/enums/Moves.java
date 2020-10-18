@@ -1,4 +1,4 @@
-package ru.vsu.dominoes.enums;
+package ru.vsu.dominoes.model.enums;
 
 public enum Moves {
   PUT, GRAB, PASS

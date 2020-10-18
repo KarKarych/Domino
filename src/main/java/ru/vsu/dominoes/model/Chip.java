@@ -1,6 +1,6 @@
 package ru.vsu.dominoes.model;
 
-import ru.vsu.dominoes.enums.Sides;
+import ru.vsu.dominoes.model.enums.Sides;
 
 public class Chip {
   private int number1;
