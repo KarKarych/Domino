@@ -4,50 +4,31 @@ import ru.vsu.dominoes.enums.Moves;
 import ru.vsu.dominoes.model.players.AIPlayer;
 import ru.vsu.dominoes.model.players.HumanPlayer;
 import ru.vsu.dominoes.model.players.Player;
-import ru.vsu.dominoes.utils.Names;
+import ru.vsu.dominoes.ui.ConsoleUI;
+import ru.vsu.dominoes.ui.GameUI;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 public class Game {
-  private final Table table;
+  private final Board board;
+  private final GameUI gameUI;
 
-  public Game(int[] countPlayers, String[] namesOfPlayers) {
-    this.table = new Table(countPlayers[0] + countPlayers[1]);
-    Player[] players = table.getPlayers();
-    Market market = table.getMarket();
-
-    List<Integer> names = new LinkedList<>();
-    for (int i = 0; i < players.length; ++i) {
-      if (i < countPlayers[0]) {
-        table.setPlayer(i, new HumanPlayer(namesOfPlayers[i], table));
-      } else {
-        int index;
-        do {
-          index = new Random().nextInt(Names.NAMES.length - 1);
-        } while (names.contains(index));
-        names.add(index);
-
-        table.setPlayer(i, new AIPlayer(Names.NAMES[index], table));
-      }
-      market.handOutChips(players[i]);
-    }
+  public Game(Board board) {
+    this.board = board;
+    this.gameUI = new ConsoleUI(board);
   }
 
   public boolean isEnd() {
-    boolean isTableEmpty = table.getLeftChip() != null;
+    boolean isTableEmpty = board.getLeftChip() != null;
 
     if (isTableEmpty) {
-      int left = table.getLeftChip().getNumber1();
-      int right = table.getRightChip().getNumber2();
+      int left = board.getLeftChip().getNumber1();
+      int right = board.getRightChip().getNumber2();
       int playWithLeft = 0;
       int playWithRight = 0;
 
-      for (int i = 0; i < table.getCountChips(); ++i) {
-        Chip chip = table.getChip(i);
-
+      for (Chip chip : board.getChips()) {
         if (chip.getNumber1() == left || chip.getNumber2() == left) {
           playWithLeft++;
         }
@@ -63,11 +44,11 @@ public class Game {
     return isTableEmpty;
   }
 
-  public boolean isPlayerEmpty(Player player) {
+  public static boolean isPlayerEmpty(Player player) {
     return player.getCountChips() == 0;
   }
 
-  public int calculateScore(Player player) {
+  public static int calculateScore(Player player) {
     if (player == null) return 0;
     int score = 0;
 
@@ -82,16 +63,16 @@ public class Game {
 
   public List<Player> getWinners() {
     Player winner = null;
-    ArrayList<Player> players = new ArrayList<>(table.getPlayers().length);
+    List<Player> players = new ArrayList<>(board.getPlayers().length);
 
-    for (Player player : table.getPlayers()) {
+    for (Player player : board.getPlayers()) {
       if (winner == null || calculateScore(player) < calculateScore(winner)) {
         winner = player;
       }
     }
 
     players.add(winner);
-    for (Player player : table.getPlayers()) {
+    for (Player player : board.getPlayers()) {
       if (player != winner && calculateScore(player) == calculateScore(winner)) {
         players.add(player);
       }
@@ -106,7 +87,7 @@ public class Game {
     if (canPut) {
       move = Moves.PUT;
     } else {
-      if (table.getMarket().getCountChips() == 0) {
+      if (board.getMarket().getCountChips() == 0) {
         move = Moves.PASS;
       } else {
         move = Moves.GRAB;
@@ -116,7 +97,29 @@ public class Game {
     return move;
   }
 
-  public Table getTable() {
-    return table;
+  public void startGame() {
+    int countPlayers = board.getPlayers().length;
+    Player player;
+    int i = 0;
+
+    do {
+      player = board.getPlayers()[i];
+      List<Chip> playableChips = player.getAvailableChips();
+
+      gameUI.printBoard(player);
+
+      Moves move = chooseMove(playableChips.size() > 0);
+      if (player instanceof HumanPlayer) {
+        gameUI.makeMoveHuman((HumanPlayer) player, playableChips, move);
+      } else {
+        gameUI.makeMoveAI((AIPlayer) player, playableChips, move);
+      }
+
+      if (++i > countPlayers - 1) {
+        i = 0;
+      }
+    } while (!isEnd() && !isPlayerEmpty(player));
+
+    gameUI.printResults(getWinners(), player, countPlayers, isEnd());
   }
 }

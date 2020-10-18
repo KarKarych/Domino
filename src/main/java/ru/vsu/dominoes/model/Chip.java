@@ -19,12 +19,12 @@ public class Chip {
     return number2;
   }
 
-  public Sides putOn(Table table, boolean isTurnNeed) {
+  public Sides putOn(Board board, boolean isTurnNeed) {
     Sides side;
 
-    boolean isLeftChipNull = table.getLeftChip() == null;
-    int left = isLeftChipNull ? 404 : table.getLeftChip().number1;
-    int right = isLeftChipNull ? 404 : table.getRightChip().number2;
+    boolean isLeftChipNull = board.getLeftChip() == null;
+    int left = isLeftChipNull ? 404 : board.getLeftChip().number1;
+    int right = isLeftChipNull ? 404 : board.getRightChip().number2;
 
     if (isLeftChipNull) {
       side = Sides.LEFT;
@@ -35,12 +35,12 @@ public class Chip {
       if (isLeftSideChipMatch) {
         side = Sides.LEFT;
         if (isTurnNeed) {
-          turnChip(table, side);
+          turnChip(board, side);
         }
       } else if (isRightSideChipMatch) {
         side = Sides.RIGHT;
         if (isTurnNeed) {
-          turnChip(table, side);
+          turnChip(board, side);
         }
       } else {
         side = Sides.NONE;
@@ -50,9 +50,9 @@ public class Chip {
     return side;
   }
 
-  private void turnChip(Table table, Sides side) {
-    int leftSideChip = table.getLeftChip().number1;
-    int rightSideChip = table.getRightChip().number2;
+  private void turnChip(Board board, Sides side) {
+    int leftSideChip = board.getLeftChip().number1;
+    int rightSideChip = board.getRightChip().number2;
 
     if ((side.equals(Sides.LEFT) && (leftSideChip == number1)) ||
             (side.equals(Sides.RIGHT) && rightSideChip == number2)) {

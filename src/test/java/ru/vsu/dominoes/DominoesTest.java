@@ -3,7 +3,7 @@ package ru.vsu.dominoes;
 import org.junit.Test;
 import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.Market;
-import ru.vsu.dominoes.model.Table;
+import ru.vsu.dominoes.model.Board;
 import ru.vsu.dominoes.model.players.HumanPlayer;
 import ru.vsu.dominoes.model.players.Player;
 
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 public class DominoesTest {
   Player player;
-  Table table;
+  Board board;
   Market market;
   Chip chip;
 
@@ -35,7 +35,8 @@ public class DominoesTest {
 
   @Test
   public void testPlayer() {
-    player = new HumanPlayer("Vasya", new Table(2));
+    player = new HumanPlayer("Vasya");
+    player.setBoard(new Board(2));
     chip = new Chip(1, 6);
     player.addChip(chip);
     List<Chip> chips = new ArrayList<>();
@@ -48,8 +49,5 @@ public class DominoesTest {
 
   @Test
   public void testTable() {
-    table = new Table(2);
-    table.setPlayer(0, player);
-    assertEquals(player, table.getPlayers()[0]);
   }
 }

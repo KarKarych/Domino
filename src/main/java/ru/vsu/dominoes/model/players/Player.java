@@ -1,9 +1,9 @@
 package ru.vsu.dominoes.model.players;
 
 import ru.vsu.dominoes.enums.Sides;
+import ru.vsu.dominoes.model.Board;
 import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.Market;
-import ru.vsu.dominoes.model.Table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +11,15 @@ import java.util.List;
 public abstract class Player {
   private final String name;
   private final List<Chip> ownChips;
-  private final Table table;
 
-  public Player(String name, Table table) {
+  public void setBoard(Board board) {
+    this.board = board;
+  }
+
+  private Board board;
+
+  public Player(String name) {
     this.name = name;
-    this.table = table;
     this.ownChips = new ArrayList<>(21);
   }
 
@@ -35,14 +39,10 @@ public abstract class Player {
     return ownChips.size();
   }
 
-  public void removeChip(Chip chip) {
-    ownChips.remove(chip);
-  }
-
   public Chip getChipFromMarket() {
     Chip chip;
     try {
-      chip = table.getMarket().getChip();
+      chip = board.getMarket().getChip();
       ownChips.add(chip);
     } catch (Market.EmptyMarketException exc) {
       chip = null;
@@ -53,9 +53,9 @@ public abstract class Player {
   public List<Chip> getAvailableChips() {
     List<Chip> chips = new ArrayList<>();
 
-    if (table.getLeftChip() != null) {
+    if (board.getLeftChip() != null) {
       for (Chip chip : ownChips) {
-        if (!chip.putOn(table, false).equals(Sides.NONE)) {
+        if (!chip.putOn(board, false).equals(Sides.NONE)) {
           chips.add(chip);
         }
       }
@@ -66,14 +66,14 @@ public abstract class Player {
     return chips;
   }
 
-  public void addChipOnTable(Chip chip, Sides side) {
+  public void addChipOnBoard(Chip chip, Sides side) {
     switch (side) {
       case LEFT -> {
-        table.addChipToLeftSide(chip);
+        board.addChipToLeftSide(chip);
         ownChips.remove(chip);
       }
       case RIGHT -> {
-        table.addChipToRightSide(chip);
+        board.addChipToRightSide(chip);
         ownChips.remove(chip);
       }
     }

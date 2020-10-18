@@ -2,16 +2,14 @@ package ru.vsu.dominoes.model;
 
 import ru.vsu.dominoes.model.players.Player;
 
-import java.util.Collections;
-import java.util.EmptyStackException;
-import java.util.Stack;
+import java.util.*;
 
 public class Market {
-  private final Stack<Chip> chips;
+  private final LinkedList<Chip> chips;
   private int playerChips;
 
   public Market(int countOfPlayers) {
-    this.chips = new Stack<>();
+    this.chips = new LinkedList<>();
 
     for (int i = 0; i < 7; ++i) {
       for (int j = i; j < 7; ++j) {
@@ -21,9 +19,19 @@ public class Market {
 
     Collections.shuffle(chips);
 
+    setCountPlayers(countOfPlayers);
+  }
+
+  public Market(int countOfPlayers, LinkedList<Chip> chips) {
+    this.chips = chips;
+    setCountPlayers(countOfPlayers);
+  }
+
+  private void setCountPlayers(int countOfPlayers) {
     switch (countOfPlayers) {
       case 2 -> playerChips = 7;
       case 3, 4 -> playerChips = 5;
+      case 5, 6 -> playerChips = 4;
     }
   }
 
@@ -32,7 +40,7 @@ public class Market {
       while (player.getCountChips() < playerChips) {
         player.addChip(chips.pop());
       }
-    } catch (EmptyStackException exc) {
+    } catch (NoSuchElementException exc) {
       throw new EmptyMarketException();
     }
   }
@@ -40,7 +48,7 @@ public class Market {
   public Chip getChip() throws EmptyMarketException {
     try {
       return chips.pop();
-    } catch (EmptyStackException exc) {
+    } catch (NoSuchElementException exc) {
       throw new EmptyMarketException();
     }
   }
