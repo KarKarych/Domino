@@ -1,5 +1,6 @@
 package ru.vsu.dominoes;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.Market;
@@ -9,9 +10,10 @@ import java.util.LinkedList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MarketTest {
-  private Market market;
+  Market market;
 
-  private void initialize() {
+  @BeforeEach
+  void initialize() {
     market = new Market(2);
     LinkedList<Chip> chips = new LinkedList<>();
     chips.add(new Chip(1, 4));
@@ -21,14 +23,12 @@ public class MarketTest {
   }
 
   @Test
-  public void testMarketGetCountChips() {
-    initialize();
+  void testMarketGetCountChips() {
     assertEquals(3, market.getCountChips());
   }
 
   @Test
-  public void testMarketGetChip() {
-    initialize();
+  void testMarketGetChip() {
     assertEquals(new Chip(1, 4), market.getChip());
   }
 }

@@ -1,5 +1,6 @@
 package ru.vsu.dominoes;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.vsu.dominoes.model.Board;
 import ru.vsu.dominoes.model.Chip;
@@ -14,9 +15,10 @@ import java.util.LinkedList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PlayerTest {
-  private Player player;
+  Player player;
 
-  private void initialize() {
+  @BeforeEach
+  void initialize() {
     player = new HumanPlayer("Yuri");
     Player android = new AIPlayer("Werther");
     Board board = new Board(2);
@@ -39,32 +41,27 @@ public class PlayerTest {
   }
 
   @Test
-  public void testPlayerGetChip() {
-    initialize();
+  void testPlayerGetChip() {
     assertEquals(new Chip(3, 3), player.getChip(0));
   }
 
   @Test
-  public void testPlayerGetCountChips() {
-    initialize();
+  void testPlayerGetCountChips() {
     assertEquals(3, player.getCountChips());
   }
 
   @Test
-  public void testPlayerGetName() {
-    initialize();
+  void testPlayerGetName() {
     assertEquals("Yuri", player.getName());
   }
 
   @Test
-  public void testPlayerGetAvailableChips() {
-    initialize();
+  void testPlayerGetAvailableChips() {
     assertEquals(Arrays.asList(new Chip(3, 6), new Chip(1, 3)), player.getAvailableChips());
   }
 
   @Test
-  public void testPlayerGetChipFromMarket() {
-    initialize();
+  void testPlayerGetChipFromMarket() {
     assertEquals(new Chip(1, 4), player.getChipFromMarket());
   }
 }

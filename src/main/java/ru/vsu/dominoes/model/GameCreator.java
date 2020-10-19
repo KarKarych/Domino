@@ -29,7 +29,7 @@ public class GameCreator {
         market.handOutChips(player);
       }
 
-      Game game = new Game(board);
+      Game game = new Game(board, new ConsoleUI(board));
       game.startGame();
     }
   }

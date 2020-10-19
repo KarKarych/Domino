@@ -2,7 +2,9 @@ package ru.vsu.dominoes.model;
 
 import ru.vsu.dominoes.model.players.Player;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class Market {
   private LinkedList<Chip> chips;

@@ -2,10 +2,8 @@ package ru.vsu.dominoes.model;
 
 import ru.vsu.dominoes.model.players.Player;
 
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Objects;
 
 public class Board {
   private final Deque<Chip> chipsOnBoard;

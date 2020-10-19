@@ -1,9 +1,9 @@
 package ru.vsu.dominoes.model.players;
 
-import ru.vsu.dominoes.model.enums.Sides;
 import ru.vsu.dominoes.model.Board;
 import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.Market;
+import ru.vsu.dominoes.model.enums.Sides;
 
 import java.util.ArrayList;
 import java.util.List;

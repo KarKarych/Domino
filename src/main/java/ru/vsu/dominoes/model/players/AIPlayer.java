@@ -1,7 +1,7 @@
 package ru.vsu.dominoes.model.players;
 
-import ru.vsu.dominoes.model.strategies.Strategy;
 import ru.vsu.dominoes.model.Chip;
+import ru.vsu.dominoes.model.strategies.Strategy;
 
 public class AIPlayer extends Player {
 

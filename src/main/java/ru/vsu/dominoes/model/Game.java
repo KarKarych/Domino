@@ -4,7 +4,6 @@ import ru.vsu.dominoes.model.enums.Moves;
 import ru.vsu.dominoes.model.players.AIPlayer;
 import ru.vsu.dominoes.model.players.HumanPlayer;
 import ru.vsu.dominoes.model.players.Player;
-import ru.vsu.dominoes.ui.ConsoleUI;
 import ru.vsu.dominoes.ui.GameUI;
 
 import java.util.ArrayList;
@@ -14,9 +13,9 @@ public class Game {
   private final Board board;
   private final GameUI gameUI;
 
-  public Game(Board board) {
+  public Game(Board board, GameUI gameUI) {
     this.board = board;
-    this.gameUI = new ConsoleUI(board);
+    this.gameUI = gameUI;
   }
 
   public boolean isEnd() {

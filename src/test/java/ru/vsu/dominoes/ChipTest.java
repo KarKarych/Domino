@@ -1,5 +1,6 @@
 package ru.vsu.dominoes;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.vsu.dominoes.model.Board;
 import ru.vsu.dominoes.model.Chip;
@@ -8,32 +9,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.vsu.dominoes.model.enums.Sides.*;
 
 public class ChipTest {
-  private Chip chip;
-  private Board board;
+  Chip chip;
+  Board board;
 
-  private void initialize() {
+  @BeforeEach
+  void initialize() {
     chip = new Chip(1, 6);
     board = new Board(2);
   }
 
   @Test
-  public void testChipGetNumber1() {
-    initialize();
-
+  void testChipGetNumber1() {
     assertEquals(1, chip.getNumber1());
   }
 
   @Test
-  public void testChipGetNumber2() {
-    initialize();
-
+  void testChipGetNumber2() {
     assertEquals(6, chip.getNumber2());
   }
 
   @Test
-  public void testChipPutOn() {
-    initialize();
-
+  void testChipPutOn() {
     board.addChipToLeftSide(new Chip(2, 5));
 
     assertEquals(NONE, chip.putOn(board, true));
@@ -42,16 +38,11 @@ public class ChipTest {
     board.addChipToRightSide(new Chip(5, 1));
 
     assertEquals(RIGHT, chip.putOn(board, true));
-
-    chip = new Chip(6, 2);
-
-    assertEquals(LEFT, chip.putOn(board, false));
+    assertEquals(LEFT, new Chip(6, 2).putOn(board, false));
   }
 
   @Test
-  public void testChipToString() {
-    initialize();
-
+  void testChipToString() {
     assertEquals(" [1|6] ", chip.toString());
   }
 }
