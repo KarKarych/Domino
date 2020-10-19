@@ -2,6 +2,8 @@ package ru.vsu.dominoes.model;
 
 import ru.vsu.dominoes.model.enums.Sides;
 
+import java.util.Objects;
+
 public class Chip {
   private int number1;
   private int number2;
@@ -65,5 +67,19 @@ public class Chip {
   @Override
   public String toString() {
     return " [" + number1 + "|" + number2 + "] ";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Chip chip = (Chip) o;
+    return number1 == chip.number1 &&
+            number2 == chip.number2;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(number1, number2);
   }
 }

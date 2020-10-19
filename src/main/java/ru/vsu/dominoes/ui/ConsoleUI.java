@@ -17,11 +17,25 @@ public class ConsoleUI implements GameUI {
   }
 
   public ConsoleUI() {
+
+  }
+
+  private String printChips(List<Chip> chips) {
+    StringBuilder stringBuilder = new StringBuilder();
+    if (chips.size() == 0) {
+      stringBuilder.append("N/A\n");
+    } else {
+      for (Chip chip : chips) {
+        stringBuilder.append(chip);
+      }
+      stringBuilder.append("\n");
+    }
+    return stringBuilder.toString();
   }
 
   @Override
   public void makeMoveHuman(HumanPlayer player, List<Chip> playableChips, Moves move) {
-    System.out.println("\nYou can play with:\n" + playableChips + "\n");
+    System.out.println("\nYou can play with:\n" + printChips(playableChips));
 
     switch (chooseMove(move)) {
       case PUT:
@@ -52,7 +66,7 @@ public class ConsoleUI implements GameUI {
 
   @Override
   public void makeMoveAI(AIPlayer player, List<Chip> playableChips, Moves move) {
-    System.out.println("\n" + player.getName() + " can play with:\n" + playableChips + "\n");
+    System.out.println("\n" + player.getName() + " can play with:\n" + printChips(playableChips));
 
     switch (chooseMove(move)) {
       case PUT:

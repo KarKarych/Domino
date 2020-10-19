@@ -5,7 +5,7 @@ import ru.vsu.dominoes.model.players.Player;
 import java.util.*;
 
 public class Market {
-  private final LinkedList<Chip> chips;
+  private LinkedList<Chip> chips;
   private int playerChips;
 
   public Market(int countOfPlayers) {
@@ -22,9 +22,8 @@ public class Market {
     setCountPlayers(countOfPlayers);
   }
 
-  public Market(int countOfPlayers, LinkedList<Chip> chips) {
+  public void setChips(LinkedList<Chip> chips) {
     this.chips = chips;
-    setCountPlayers(countOfPlayers);
   }
 
   private void setCountPlayers(int countOfPlayers) {

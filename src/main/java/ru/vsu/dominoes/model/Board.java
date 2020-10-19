@@ -2,13 +2,15 @@ package ru.vsu.dominoes.model;
 
 import ru.vsu.dominoes.model.players.Player;
 
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class Board {
-  private Player[] players;
   private final Deque<Chip> chipsOnBoard;
   private final Market market;
+  private Player[] players;
 
   public Board(int countPlayers) {
     this.chipsOnBoard = new LinkedList<>();
@@ -49,6 +51,15 @@ public class Board {
 
   @Override
   public String toString() {
-    return chipsOnBoard.toString();
+    if (chipsOnBoard.size() == 0) {
+      return "N/A";
+    }
+
+    StringBuilder stringBuilder = new StringBuilder();
+    for (Chip chip : chipsOnBoard) {
+      stringBuilder.append(chip);
+    }
+
+    return stringBuilder.toString();
   }
 }

@@ -7,20 +7,20 @@ import ru.vsu.dominoes.model.Market;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Player {
   private final String name;
   private final List<Chip> ownChips;
-
-  public void setBoard(Board board) {
-    this.board = board;
-  }
-
   private Board board;
 
   public Player(String name) {
     this.name = name;
     this.ownChips = new ArrayList<>(21);
+  }
+
+  public void setBoard(Board board) {
+    this.board = board;
   }
 
   public String getName() {
@@ -80,7 +80,26 @@ public abstract class Player {
   }
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Player player = (Player) o;
+    return Objects.equals(name, player.name) &&
+            Objects.equals(ownChips, player.ownChips) &&
+            Objects.equals(board, player.board);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, ownChips, board);
+  }
+
+  @Override
   public String toString() {
+    if (ownChips.size() == 0) {
+      return "N/A";
+    }
+
     StringBuilder stringBuilder = new StringBuilder();
     for (Chip chip : ownChips) {
       stringBuilder.append(chip);

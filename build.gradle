@@ -2,6 +2,11 @@ plugins {
   id 'java'
 }
 
+ext {
+  junitVer = "5.7.0"
+}
+
+
 group 'ru.vsu.dominoes'
 version '1.0-SNAPSHOT'
 
@@ -15,5 +20,14 @@ java {
 }
 
 dependencies {
-  testImplementation group: 'junit', name: 'junit', version: '4.12'
+  testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVer"
+  testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVer"
+  testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitVer"
+}
+
+test {
+  useJUnitPlatform()
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
 }
