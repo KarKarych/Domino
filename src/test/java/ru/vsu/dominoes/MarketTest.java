@@ -23,12 +23,12 @@ public class MarketTest {
   }
 
   @Test
-  void testMarketGetCountChips() {
+  void testGetCountChips() {
     assertEquals(3, market.getCountChips());
   }
 
   @Test
-  void testMarketGetChip() {
+  void testGetChip() {
     assertEquals(new Chip(1, 4), market.getChip());
   }
 }

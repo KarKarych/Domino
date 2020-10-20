@@ -19,17 +19,17 @@ public class ChipTest {
   }
 
   @Test
-  void testChipGetNumber1() {
+  void testGetNumber1() {
     assertEquals(1, chip.getNumber1());
   }
 
   @Test
-  void testChipGetNumber2() {
+  void testGetNumber2() {
     assertEquals(6, chip.getNumber2());
   }
 
   @Test
-  void testChipPutOn() {
+  void testPutOn() {
     board.addChipToLeftSide(new Chip(2, 5));
 
     assertEquals(NONE, chip.putOn(board, true));
@@ -42,7 +42,7 @@ public class ChipTest {
   }
 
   @Test
-  void testChipToString() {
+  void testToString() {
     assertEquals(" [1|6] ", chip.toString());
   }
 }

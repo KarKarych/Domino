@@ -41,27 +41,27 @@ public class PlayerTest {
   }
 
   @Test
-  void testPlayerGetChip() {
+  void testGetChip() {
     assertEquals(new Chip(3, 3), player.getChip(0));
   }
 
   @Test
-  void testPlayerGetCountChips() {
+  void testGetCountChips() {
     assertEquals(3, player.getCountChips());
   }
 
   @Test
-  void testPlayerGetName() {
+  void testGetName() {
     assertEquals("Yuri", player.getName());
   }
 
   @Test
-  void testPlayerGetAvailableChips() {
+  void testGetAvailableChips() {
     assertEquals(Arrays.asList(new Chip(3, 6), new Chip(1, 3)), player.getAvailableChips());
   }
 
   @Test
-  void testPlayerGetChipFromMarket() {
+  void testGetChipFromMarket() {
     assertEquals(new Chip(1, 4), player.getChipFromMarket());
   }
 }

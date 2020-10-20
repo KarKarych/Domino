@@ -29,27 +29,27 @@ public class BoardTest {
   }
 
   @Test
-  void boardTestToString() {
+  void testToString() {
     assertEquals(" [1|3]  [3|3]  [3|6] ", board.toString());
   }
 
   @Test
-  void boardTestGetLeftChip() {
+  void testGetLeftChip() {
     assertEquals(new Chip(1, 3), board.getLeftChip());
   }
 
   @Test
-  void boardTestGetRightChip() {
+  void testGetRightChip() {
     assertEquals(new Chip(3, 6), board.getRightChip());
   }
 
   @Test
-  void boardTestGetChips() {
+  void testGetChips() {
     assertEquals(Arrays.asList(new Chip(1, 3), new Chip(3, 3), new Chip(3, 6)), board.getChips());
   }
 
   @Test
-  void boardTestGetPlayers() {
+  void testGetPlayers() {
     assertArrayEquals(new Player[]{new HumanPlayer("Yuri"), new AIPlayer("Werther")}, board.getPlayers());
   }
 }
