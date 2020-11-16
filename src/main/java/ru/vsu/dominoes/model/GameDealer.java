@@ -1,5 +1,6 @@
 package ru.vsu.dominoes.model;
 
+import ru.vsu.dominoes.db.DBManager;
 import ru.vsu.dominoes.model.players.AIPlayer;
 import ru.vsu.dominoes.model.players.HumanPlayer;
 import ru.vsu.dominoes.model.players.Player;
@@ -11,9 +12,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class GameCreator {
-  public GameCreator() {
+public class GameDealer {
+  private Game game;
+
+  public GameDealer() {
     GameUI gameUI = new ConsoleUI();
+    DBManager dbManager = new DBManager();
 
     int[] countPlayers = gameUI.getCountOfPlayersFromUser();
     if (countPlayers != null) {
@@ -29,8 +33,9 @@ public class GameCreator {
         market.handOutChips(player);
       }
 
-      Game game = new Game(board, new ConsoleUI(board));
+      game = new Game(board, new ConsoleUI(board));
       game.startGame();
+      dbManager.saveResults(game);
     }
   }
 

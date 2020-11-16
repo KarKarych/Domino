@@ -80,6 +80,10 @@ public class Game {
     return players;
   }
 
+  public Player[] getPlayers() {
+    return board.getPlayers();
+  }
+
   public Moves chooseMove(boolean canPut) {
     Moves move;
 

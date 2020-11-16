@@ -130,6 +130,7 @@ public class ConsoleUI implements GameUI {
 
       if (!Game.isPlayerEmpty(player) && isEnd) {
         scores[i] = Game.calculateScore(board.getPlayers()[i]);
+        System.out.println("\n" + board.getPlayers()[i].getName());
         System.out.println("Score: " + scores[i]);
       }
     }

@@ -4,6 +4,7 @@ plugins {
 
 ext {
   junitVer = "5.7.0"
+  postgresqlVer = "42.2.18"
 }
 
 
@@ -24,6 +25,7 @@ java {
 }*/
 
 dependencies {
+  implementation "org.postgresql:postgresql:$postgresqlVer"
   testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVer"
   testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVer"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVer"
