@@ -1,6 +1,6 @@
 package ru.vsu.dominoes.model;
 
-import ru.vsu.dominoes.db.DBManager;
+import ru.vsu.dominoes.db.DataBaseManager;
 import ru.vsu.dominoes.model.players.AIPlayer;
 import ru.vsu.dominoes.model.players.HumanPlayer;
 import ru.vsu.dominoes.model.players.Player;
@@ -16,7 +16,7 @@ import java.util.Random;
 public class GameDealer {
   public GameDealer() {
     GameUI gameUI = new ConsoleUI();
-    DBManager dbManager = new DBManager();
+    DataBaseManager dataBaseManager = new DataBaseManager();
 
     int[] countPlayers = gameUI.getCountOfPlayersFromUser();
     if (countPlayers != null) {
@@ -33,16 +33,16 @@ public class GameDealer {
       }
 
       Game game = new Game(board, new ConsoleUI(board));
-      game.startGame();
-      dbManager.saveResults(game);
+      game.play();
+      dataBaseManager.saveResults(game, board.getPlayers());
 
-      gameUI.printResultsOfLastGames(dbManager.getLastGames(5));
+      gameUI.printResultsOfLastGames(dataBaseManager.getLastGames(5));
 
       List<String> playersNames = new ArrayList<>();
       for (Player player : players) {
         playersNames.add(player.getName());
       }
-      gameUI.printStatsOfPlayers(dbManager.getPlayers(playersNames));
+      gameUI.printStatsOfPlayers(dataBaseManager.getPlayers(playersNames));
     }
   }
 

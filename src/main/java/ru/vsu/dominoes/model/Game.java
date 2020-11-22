@@ -80,10 +80,6 @@ public class Game {
     return players;
   }
 
-  public Player[] getPlayers() {
-    return board.getPlayers();
-  }
-
   public Moves chooseMove(boolean canPut) {
     Moves move;
 
@@ -100,7 +96,7 @@ public class Game {
     return move;
   }
 
-  public void startGame() {
+  public void play() {
     int countPlayers = board.getPlayers().length;
     Player player;
     int i = 0;

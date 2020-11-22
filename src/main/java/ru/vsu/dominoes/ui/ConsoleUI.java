@@ -1,7 +1,7 @@
 package ru.vsu.dominoes.ui;
 
-import ru.vsu.dominoes.db.model.GameStat;
-import ru.vsu.dominoes.db.model.PlayerDB;
+import ru.vsu.dominoes.db.model.GameStatistic;
+import ru.vsu.dominoes.db.model.PlayerDataBase;
 import ru.vsu.dominoes.model.Board;
 import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.Game;
@@ -24,7 +24,6 @@ public class ConsoleUI implements GameUI {
   }
 
   public ConsoleUI() {
-
   }
 
   private String printChips(List<Chip> chips) {
@@ -103,46 +102,46 @@ public class ConsoleUI implements GameUI {
   }
 
   @Override
-  public void printResultsOfLastGames(List<List<GameStat>> gameStatsList) {
-    for (List<GameStat> gameStats : gameStatsList) {
+  public void printResultsOfLastGames(List<List<GameStatistic>> gameStatsList) {
+    for (List<GameStatistic> gameStatistics : gameStatsList) {
       StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append("Game from ").append(gameStats.get(0).getDate(), 11, 16)
+      stringBuilder.append("Game from ").append(gameStatistics.get(0).getDate(), 11, 16)
               .append(" ")
-              .append(gameStats.get(0).getDate(), 0, 10)
+              .append(gameStatistics.get(0).getDate(), 0, 10)
               .append("\n").
               append("Names");
 
       int index = 0;
-      for (GameStat gameStat : gameStats) {
+      for (GameStatistic gameStatistic : gameStatistics) {
         if (index++ != 0) {
           stringBuilder.append(", ");
         } else {
           stringBuilder.append(" ");
         }
 
-        stringBuilder.append(gameStat.getPlayerName());
+        stringBuilder.append(gameStatistic.getPlayerName());
       }
       stringBuilder.append(". ").append("Scores");
       index = 0;
-      for (GameStat gameStat : gameStats) {
+      for (GameStatistic gameStatistic : gameStatistics) {
         if (index++ != 0) {
           stringBuilder.append(", ");
         } else {
           stringBuilder.append(" ");
         }
 
-        stringBuilder.append(gameStat.getScore());
+        stringBuilder.append(gameStatistic.getScore());
       }
       System.out.println(stringBuilder.append("\n").toString());
     }
   }
 
   @Override
-  public void printStatsOfPlayers(List<PlayerDB> players) {
-    for (PlayerDB playerDB : players) {
-      System.out.println("Player " + playerDB.getName() +
-              ". Wins " + playerDB.getWin() +
-              ". Defeats " + playerDB.getDefeat());
+  public void printStatsOfPlayers(List<PlayerDataBase> players) {
+    for (PlayerDataBase playerDataBase : players) {
+      System.out.println("Player " + playerDataBase.getName() +
+              ". Wins " + playerDataBase.getWin() +
+              ". Defeats " + playerDataBase.getDefeat());
     }
   }
 
