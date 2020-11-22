@@ -1,5 +1,7 @@
 package ru.vsu.dominoes.ui;
 
+import ru.vsu.dominoes.db.model.GameStat;
+import ru.vsu.dominoes.db.model.PlayerDB;
 import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.enums.Moves;
 import ru.vsu.dominoes.model.players.AIPlayer;
@@ -22,4 +24,8 @@ public interface GameUI {
   void makeMoveHuman(HumanPlayer player, List<Chip> playableChips, Moves move);
 
   void makeMoveAI(AIPlayer player, List<Chip> playableChips, Moves move);
+
+  void printResultsOfLastGames(List<List<GameStat>> gameStatsList);
+
+  void printStatsOfPlayers(List<PlayerDB> players);
 }

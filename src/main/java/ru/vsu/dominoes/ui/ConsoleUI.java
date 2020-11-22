@@ -1,5 +1,7 @@
 package ru.vsu.dominoes.ui;
 
+import ru.vsu.dominoes.db.model.GameStat;
+import ru.vsu.dominoes.db.model.PlayerDB;
 import ru.vsu.dominoes.model.Board;
 import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.Game;
@@ -100,16 +102,72 @@ public class ConsoleUI implements GameUI {
     endOfMove();
   }
 
+  @Override
+  public void printResultsOfLastGames(List<List<GameStat>> gameStatsList) {
+    for (List<GameStat> gameStats : gameStatsList) {
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.append("Game from ").append(gameStats.get(0).getDate(), 11, 16)
+              .append(" ")
+              .append(gameStats.get(0).getDate(), 0, 10)
+              .append("\n").
+              append("Names");
+
+      int index = 0;
+      for (GameStat gameStat : gameStats) {
+        if (index++ != 0) {
+          stringBuilder.append(", ");
+        } else {
+          stringBuilder.append(" ");
+        }
+
+        stringBuilder.append(gameStat.getPlayerName());
+      }
+      stringBuilder.append(". ").append("Scores");
+      index = 0;
+      for (GameStat gameStat : gameStats) {
+        if (index++ != 0) {
+          stringBuilder.append(", ");
+        } else {
+          stringBuilder.append(" ");
+        }
+
+        stringBuilder.append(gameStat.getScore());
+      }
+      System.out.println(stringBuilder.append("\n").toString());
+    }
+  }
+
+  @Override
+  public void printStatsOfPlayers(List<PlayerDB> players) {
+    for (PlayerDB playerDB : players) {
+      System.out.println("Player " + playerDB.getName() +
+              ". Wins " + playerDB.getWin() +
+              ". Defeats " + playerDB.getDefeat());
+    }
+  }
+
   private void endOfMove() {
     System.out.print("\nPress Enter to go to the next move.");
     INPUT.nextLine();
     System.out.println();
   }
 
+  private void printBoard(){
+    if (board.getChips().size() == 0) {
+      System.out.println("N/A");
+    } else {
+      StringBuilder stringBuilder = new StringBuilder();
+      for (Chip chip : board.getChips()) {
+        stringBuilder.append(chip);
+      }
+      System.out.println(stringBuilder.toString());
+    }
+  }
+
   @Override
   public void printBoard(Player player) {
     System.out.println("* * * * * * * * * * * * BOARD * * * * * * * * * * * *");
-    System.out.println(board);
+    printBoard();
     System.out.println("\nChips in the market: " + board.getMarket().getCountChips());
     System.out.println("\nIt's your turn " + player.getName());
     System.out.println(player);
@@ -119,7 +177,8 @@ public class ConsoleUI implements GameUI {
   public void printResults(List<Player> winners, Player player, int countPlayers, boolean isEnd) {
     int[] scores = new int[countPlayers];
     System.out.println("\n\n* * * * * * * * * * * * THE GAME IS OVER * * * * * * * * * * * *\n" +
-            "BOARD:\n" + board);
+            "BOARD:\n");
+    printBoard();
     for (int i = 0; i < countPlayers; ++i) {
       int n = board.getPlayers()[i].getCountChips();
       if (n > 0) {

@@ -8,13 +8,12 @@ import ru.vsu.dominoes.ui.ConsoleUI;
 import ru.vsu.dominoes.ui.GameUI;
 import ru.vsu.dominoes.utils.Names;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 public class GameDealer {
-  private Game game;
-
   public GameDealer() {
     GameUI gameUI = new ConsoleUI();
     DBManager dbManager = new DBManager();
@@ -33,9 +32,17 @@ public class GameDealer {
         market.handOutChips(player);
       }
 
-      game = new Game(board, new ConsoleUI(board));
+      Game game = new Game(board, new ConsoleUI(board));
       game.startGame();
       dbManager.saveResults(game);
+
+      gameUI.printResultsOfLastGames(dbManager.getLastGames(5));
+
+      List<String> playersNames = new ArrayList<>();
+      for (Player player : players) {
+        playersNames.add(player.getName());
+      }
+      gameUI.printStatsOfPlayers(dbManager.getPlayers(playersNames));
     }
   }
 

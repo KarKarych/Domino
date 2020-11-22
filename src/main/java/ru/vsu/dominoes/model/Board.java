@@ -46,18 +46,4 @@ public class Board {
   public Deque<Chip> getChips() {
     return chipsOnBoard;
   }
-
-  @Override
-  public String toString() {
-    if (chipsOnBoard.size() == 0) {
-      return "N/A";
-    }
-
-    StringBuilder stringBuilder = new StringBuilder();
-    for (Chip chip : chipsOnBoard) {
-      stringBuilder.append(chip);
-    }
-
-    return stringBuilder.toString();
-  }
 }
