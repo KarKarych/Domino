@@ -1,9 +1,7 @@
-package ru.vsu.dominoes;
+package ru.vsu.dominoes.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.vsu.dominoes.model.Board;
-import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.players.AIPlayer;
 import ru.vsu.dominoes.model.players.HumanPlayer;
 import ru.vsu.dominoes.model.players.Player;
@@ -26,11 +24,6 @@ public class BoardTest {
     board.addChipToLeftSide(new Chip(3, 3));
     board.addChipToLeftSide(new Chip(1, 3));
     board.addChipToRightSide(new Chip(3, 6));
-  }
-
-  @Test
-  void testToString() {
-    assertEquals(" [1|3]  [3|3]  [3|6] ", board.toString());
   }
 
   @Test

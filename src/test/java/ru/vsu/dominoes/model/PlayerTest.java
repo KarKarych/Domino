@@ -1,10 +1,7 @@
-package ru.vsu.dominoes;
+package ru.vsu.dominoes.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.vsu.dominoes.model.Board;
-import ru.vsu.dominoes.model.Chip;
-import ru.vsu.dominoes.model.Market;
 import ru.vsu.dominoes.model.players.AIPlayer;
 import ru.vsu.dominoes.model.players.HumanPlayer;
 import ru.vsu.dominoes.model.players.Player;
@@ -14,7 +11,7 @@ import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PlayerDBTest {
+public class PlayerTest {
   Player player;
 
   @BeforeEach

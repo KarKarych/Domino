@@ -1,9 +1,7 @@
-package ru.vsu.dominoes;
+package ru.vsu.dominoes.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.vsu.dominoes.model.Board;
-import ru.vsu.dominoes.model.Chip;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.vsu.dominoes.model.enums.Sides.*;
