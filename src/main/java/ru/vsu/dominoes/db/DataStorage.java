@@ -1,6 +1,6 @@
 package ru.vsu.dominoes.db;
 
-import ru.vsu.dominoes.db.model.GameStats;
+import ru.vsu.dominoes.db.model.GameStat;
 import ru.vsu.dominoes.db.model.PlayerDB;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public interface DataStorage {
 
   List<PlayerDB> getPlayers(List<String> names);
 
-  void saveGame(GameStats gameStat);
+  void saveGame(List<GameStat> gameStats);
 
-  List<GameStats> getLastGames(Integer countGames);
+  List<List<GameStat>> getLastGames(Integer countGames);
 }

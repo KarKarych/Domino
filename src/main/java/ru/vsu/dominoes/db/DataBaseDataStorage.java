@@ -1,6 +1,6 @@
 package ru.vsu.dominoes.db;
 
-import ru.vsu.dominoes.db.model.GameStats;
+import ru.vsu.dominoes.db.model.GameStat;
 import ru.vsu.dominoes.db.model.PlayerDB;
 
 import java.sql.*;
@@ -30,17 +30,20 @@ public class DataBaseDataStorage implements DataStorage {
     }
   }
 
-  private void savePlayersToDataBase(List<PlayerDB> playerDBS) throws SQLException {
-    try (Connection c = getConnection()) {
-      for (PlayerDB playerDB : playerDBS) {
+  private void savePlayersToDataBase(List<PlayerDB> playersDB) throws SQLException {
+    Connection c = null;
+    try {
+      c = getConnection();
+      c.setAutoCommit(false);
+      PreparedStatement statement = null;
+      for (PlayerDB playerDB : playersDB) {
         if (isPlayerExist(playerDB)) {
-          PreparedStatement statement = c.prepareStatement("insert into player (player_name, player_wins, player_defeats) values (?, ?, ?)");
+          statement = c.prepareStatement("insert into player (player_name, player_wins, player_defeats) values (?, ?, ?)");
           statement.setString(1, playerDB.getName());
           statement.setInt(2, playerDB.getWin());
           statement.setInt(3, playerDB.getDefeat());
-          statement.executeUpdate();
         } else {
-          PreparedStatement statement = c.prepareStatement("select player_wins, player_defeats from player where player_name = ?");
+          statement = c.prepareStatement("select player_wins, player_defeats from player where player_name = ?");
           statement.setString(1, playerDB.getName());
           ResultSet rs = statement.executeQuery();
           rs.next();
@@ -52,9 +55,22 @@ public class DataBaseDataStorage implements DataStorage {
           statement.setInt(1, updatedPlayerDB.getWin());
           statement.setInt(2, updatedPlayerDB.getDefeat());
           statement.setString(3, updatedPlayerDB.getName());
-          statement.executeUpdate();
+          rs.close();
         }
+        statement.executeUpdate();
       }
+
+      assert statement != null;
+      statement.close();
+      c.commit();
+    } catch (SQLException exception) {
+      assert c != null;
+      c.rollback();
+
+      throw new RuntimeException("Cannot save player", exception);
+    } finally{
+      assert c != null;
+      c.close();
     }
   }
 
@@ -112,7 +128,6 @@ public class DataBaseDataStorage implements DataStorage {
     }
   }
 
-
   @Override
   public PlayerDB getPlayer(String name) {
     try {
@@ -123,7 +138,7 @@ public class DataBaseDataStorage implements DataStorage {
   }
 
   @Override
-  public List<GameStats> getLastGames(Integer countGames) {
+  public List<List<GameStat>> getLastGames(Integer countGames) {
     try {
       try (Connection c = getConnection()) {
         PreparedStatement statement = c.prepareStatement("select game_id, game_time_end from game_history order by game_id desc limit ?");
@@ -137,22 +152,18 @@ public class DataBaseDataStorage implements DataStorage {
           dates.add(rs.getString(2));
         }
 
-        List<GameStats> gameStats = new ArrayList<>();
+        List<List<GameStat>> gameStats = new ArrayList<>();
         for (int i = 0; i < gameId.size(); i++) {
+          List<GameStat> gameStat = new ArrayList<>();
           statement = c.prepareStatement("select player_name, player_score from game_score " +
                   "join player on game_score.player_id = player.player_id " +
                   "where game_id = ?");
           statement.setInt(1, gameId.get(i));
 
           rs = statement.executeQuery();
-          List<String> names = new ArrayList<>();
-          List<Integer> scores = new ArrayList<>();
           while (rs.next()) {
-            names.add(rs.getString(1));
-            scores.add(rs.getInt(2));
+            gameStat.add(new GameStat(rs.getString(1), rs.getInt(2), dates.get(i)));
           }
-          GameStats gameStat = new GameStats(names, scores);
-          gameStat.setDate(dates.get(i));
           gameStats.add(gameStat);
         }
 
@@ -163,32 +174,50 @@ public class DataBaseDataStorage implements DataStorage {
     }
   }
 
-  @Override
-  public void saveGame(GameStats gameStat) {
+  public void saveGameToDataBase(List<GameStat> gameStats) throws SQLException {
+    Connection c = null;
     try {
-      try (Connection c = getConnection()) {
-        PreparedStatement statement = c.prepareStatement("insert into game_history (game_time_end) values (CURRENT_TIMESTAMP)");
-        statement.executeUpdate();
+      c = getConnection();
+      c.setAutoCommit(false);
+      PreparedStatement statement = c.prepareStatement("insert into game_history (game_time_end) values (CURRENT_TIMESTAMP)");
+      statement.executeUpdate();
 
-        statement = c.prepareStatement("select game_id from game_history order by game_id desc limit 1");
-        ResultSet rs = statement.executeQuery();
-        rs.next();
+      List<PlayerDB> playerDBS = new ArrayList<>();
+      List<Integer> scores= new ArrayList<>();
 
-        int lastId = rs.getInt(1);
-
-        List<PlayerDB> playerDBS = getPlayers(gameStat.getPlayerNames());
-        List<Integer> scores = gameStat.getScores();
-
-        for (int i = 0; i < playerDBS.size(); i++) {
-          PlayerDB playerDB = playerDBS.get(i);
-          Integer score = scores.get(i);
-          statement = c.prepareStatement("insert into game_score (game_id, player_id, player_score) values (?, ?, ?)");
-          statement.setInt(1, lastId);
-          statement.setInt(2, playerDB.getId());
-          statement.setInt(3, score);
-          statement.executeUpdate();
-        }
+      for (GameStat gameStat : gameStats) {
+        playerDBS.add(getPlayer(gameStat.getPlayerName()));
+        scores.add(gameStat.getScore());
       }
+
+      for (int i = 0; i < playerDBS.size(); i++) {
+        PlayerDB playerDB = playerDBS.get(i);
+        Integer score = scores.get(i);
+        statement = c.prepareStatement("insert into game_score (game_id, player_id, player_score) values (" +
+                "(select game_id from game_history order by game_id desc limit 1), " +
+                "?, " +
+                "?)");
+        statement.setInt(1, playerDB.getId());
+        statement.setInt(2, score);
+        statement.executeUpdate();
+      }
+
+      statement.close();
+      c.commit();
+    } catch (SQLException exception) {
+      assert c != null;
+      c.rollback();
+      throw new RuntimeException("Cannot save game", exception);
+    } finally{
+      assert c != null;
+      c.close();
+    }
+  }
+
+  @Override
+  public void saveGame(List<GameStat> gameStats) {
+    try {
+      saveGameToDataBase(gameStats);
     } catch (SQLException exception) {
       throw new RuntimeException("Cannot save game", exception);
     }

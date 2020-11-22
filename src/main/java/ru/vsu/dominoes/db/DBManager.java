@@ -1,6 +1,6 @@
 package ru.vsu.dominoes.db;
 
-import ru.vsu.dominoes.db.model.GameStats;
+import ru.vsu.dominoes.db.model.GameStat;
 import ru.vsu.dominoes.db.model.PlayerDB;
 import ru.vsu.dominoes.model.Game;
 import ru.vsu.dominoes.model.players.Player;
@@ -13,31 +13,30 @@ public class DBManager {
     Player[] boardPlayers = game.getPlayers();
     DataStorage dataStorage = new DataBaseDataStorage();
     List<PlayerDB> players = new ArrayList<>();
-    List<String> playersNames = new ArrayList<>();
-    List<Integer> scores = new ArrayList<>();
+    List<GameStat> gameStats = new ArrayList<>();
     for (Player boardPlayer : boardPlayers) {
       PlayerDB playerTemp = new PlayerDB(boardPlayer.getName(), 0, 0);
-      playersNames.add(boardPlayer.getName());
       if (!game.getWinners().contains(boardPlayer)) {
         playerTemp.setDefeat(1);
       } else {
         playerTemp.setWin(1);
       }
-
       players.add(playerTemp);
-      scores.add(Game.calculateScore(boardPlayer));
 
+      gameStats.add(new GameStat(boardPlayer.getName(), Game.calculateScore(boardPlayer)));
     }
+
     dataStorage.savePlayers(players);
-    dataStorage.saveGame(new GameStats(playersNames, scores));
+    dataStorage.saveGame(gameStats);
+  }
 
-    List<GameStats> gameStats = dataStorage.getLastGames(5);
-    for (GameStats gameStat : gameStats) {
-      System.out.println(gameStat);
-    }
+  public List<List<GameStat>> getLastGames(int countGames){
+    DataStorage dataStorage = new DataBaseDataStorage();
+    return dataStorage.getLastGames(countGames);
+  }
 
-    for (PlayerDB playerDB : dataStorage.getPlayers(playersNames)) {
-      System.out.println(playerDB);
-    }
+  public List<PlayerDB> getPlayers(List<String> playersNames){
+    DataStorage dataStorage = new DataBaseDataStorage();
+    return dataStorage.getPlayers(playersNames);
   }
 }

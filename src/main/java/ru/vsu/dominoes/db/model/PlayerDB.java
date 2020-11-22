@@ -1,10 +1,10 @@
 package ru.vsu.dominoes.db.model;
 
 public class PlayerDB {
-  private Integer id;
-  private String name;
+  private final String name;
   private Integer win;
   private Integer defeat;
+  private Integer id;
 
   public PlayerDB(String name, Integer win, Integer defeat) {
     this.name = name;
@@ -28,10 +28,6 @@ public class PlayerDB {
     return name;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public Integer getWin() {
     return win;
   }
@@ -50,9 +46,5 @@ public class PlayerDB {
 
   public Integer getId() {
     return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
   }
 }
