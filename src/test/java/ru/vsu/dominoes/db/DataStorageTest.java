@@ -20,7 +20,7 @@ public class DataStorageTest {
   }
 
   @Test
-  public void testSavePlayer() {
+  public void testSaveAndGetPlayer() {
     String name = "Kar-Karych";
     PlayerDataBase playerTest = new PlayerDataBase(name, 0, 1);
     PlayerDataBase playerSavedTest = dataStorage.savePlayer(playerTest);
@@ -28,28 +28,13 @@ public class DataStorageTest {
   }
 
   @Test
-  public void testSavePlayers() {
+  public void testSaveAndGetPlayers() {
     String name1 = "Emily";
     String name2 = "Hola";
     PlayerDataBase playerTest1 = new PlayerDataBase(name1, 0, 1);
     PlayerDataBase playerTest2 = new PlayerDataBase(name2, 1, 0);
     List<PlayerDataBase> playersSaved = dataStorage.savePlayers(Arrays.asList(playerTest1, playerTest2));
     assertEquals(playersSaved, dataStorage.getPlayers(Arrays.asList(name1, name2)));
-  }
-
-  @Test
-  public void testGetPlayer() {
-    PlayerDataBase playerTest = new PlayerDataBase("Vadim", 1, 0);
-    assertEquals(playerTest, dataStorage.getPlayer("Vadim"));
-  }
-
-  @Test
-  public void testGetPlayers() {
-    String name1 = "Unique";
-    String name2 = "Tom";
-    PlayerDataBase playerTest1 = new PlayerDataBase(name1, 1, 2);
-    PlayerDataBase playerTest2 = new PlayerDataBase(name2, 4, 4);
-    assertEquals(Arrays.asList(playerTest1, playerTest2), dataStorage.getPlayers(Arrays.asList(name1, name2)));
   }
 
   @Test
