@@ -15,8 +15,10 @@ import java.util.Random;
 
 public class GameDealer {
   public GameDealer() {
+  }
+
+  public void play() {
     GameUI gameUI = new ConsoleUI();
-    DataBaseManager dataBaseManager = new DataBaseManager();
 
     int[] countPlayers = gameUI.getCountOfPlayersFromUser();
     if (countPlayers != null) {
@@ -34,6 +36,8 @@ public class GameDealer {
 
       Game game = new Game(board, new ConsoleUI(board));
       game.play();
+
+      DataBaseManager dataBaseManager = new DataBaseManager();
       dataBaseManager.saveResults(game, board.getPlayers());
 
       gameUI.printResultsOfLastGames(dataBaseManager.getLastGames(5));
