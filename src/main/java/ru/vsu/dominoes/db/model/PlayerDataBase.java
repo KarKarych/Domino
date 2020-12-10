@@ -10,14 +10,14 @@ public class PlayerDataBase {
 
   public PlayerDataBase(String name, Integer win, Integer defeat) {
     this.name = name;
-    this.win = win;
-    this.defeat = defeat;
+    this.win = win != null ? win : 0;
+    this.defeat = defeat != null ? defeat : 0;
   }
 
   public PlayerDataBase(String name, Integer win, Integer defeat, Integer id) {
     this.name = name;
-    this.win = win;
-    this.defeat = defeat;
+    this.win = win != null ? win : 0;
+    this.defeat = defeat != null ? defeat : 0;
     this.id = id;
   }
 
@@ -56,7 +56,8 @@ public class PlayerDataBase {
     PlayerDataBase that = (PlayerDataBase) o;
     return Objects.equals(name, that.name) &&
             Objects.equals(win, that.win) &&
-            Objects.equals(defeat, that.defeat);
+            Objects.equals(defeat, that.defeat) &&
+            Objects.equals(id, that.id);
   }
 
   @Override

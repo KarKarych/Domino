@@ -2,20 +2,20 @@ package ru.vsu.dominoes.db.model;
 
 import java.util.Objects;
 
-public class GameStatistic implements Comparable<GameStatistic>{
+public class GameStatistic implements Comparable<GameStatistic> {
   private final String playerName;
   private final Integer score;
   private String date;
-
   private Integer id;
+
   public GameStatistic(String playerName, Integer score) {
     this.playerName = playerName;
-    this.score = score;
+    this.score = score != null ? score : 0;
   }
 
   public GameStatistic(String playerName, Integer score, String date, Integer id) {
     this.playerName = playerName;
-    this.score = score;
+    this.score = score != null ? score : 0;
     this.date = date;
     this.id = id;
   }

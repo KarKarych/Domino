@@ -18,9 +18,11 @@ import java.util.Scanner;
 public class ConsoleUI implements GameUI {
   public static final Scanner INPUT = new Scanner(System.in);
   private Board board;
+  private boolean skipEndOfMove = false;
 
-  public ConsoleUI(Board board) {
+  public ConsoleUI(Board board, boolean skipEndOfMove) {
     this.board = board;
+    this.skipEndOfMove = skipEndOfMove;
   }
 
   public ConsoleUI() {
@@ -67,7 +69,9 @@ public class ConsoleUI implements GameUI {
         break;
     }
 
-    endOfMove();
+    if (!skipEndOfMove) {
+      endOfMove();
+    }
   }
 
   @Override
@@ -98,7 +102,9 @@ public class ConsoleUI implements GameUI {
         break;
     }
 
-    endOfMove();
+    if (!skipEndOfMove) {
+      endOfMove();
+    }
   }
 
   @Override
@@ -151,7 +157,7 @@ public class ConsoleUI implements GameUI {
     System.out.println();
   }
 
-  private void printBoard(){
+  private void printBoard() {
     if (board.getChips().size() == 0) {
       System.out.println("N/A");
     } else {

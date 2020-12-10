@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+//TODO Нужен тест игры/дб менеджера
 public class DataStorageTest {
   DataStorage dataStorage;
 
