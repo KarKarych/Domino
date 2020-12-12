@@ -1,9 +1,9 @@
 package ru.vsu.dominoes;
 
-import ru.vsu.dominoes.model.GameDealer;
+import ru.vsu.dominoes.model.GameManager;
 
 public class Console {
   public static void main(String[] args) {
-    new GameDealer().play();
+    new GameManager().play();
   }
 }

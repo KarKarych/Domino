@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class Player {
-  private final String name;
-  private final List<Chip> ownChips;
-  private Board board;
+  protected final String name;
+  protected final List<Chip> ownChips;
+  protected Board board;
 
   public Player(String name) {
     this.name = name;
@@ -48,6 +48,11 @@ public abstract class Player {
       chip = null;
     }
     return chip;
+  }
+
+  public void replaceChip(Chip chip) {
+    board.getMarket().removeChip(chip);
+    ownChips.add(chip);
   }
 
   public List<Chip> getAvailableChips() {

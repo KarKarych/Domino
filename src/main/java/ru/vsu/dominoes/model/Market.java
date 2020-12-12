@@ -24,8 +24,20 @@ public class Market {
     setCountPlayers(countOfPlayers);
   }
 
+  public Market(LinkedList<Chip> chips){
+    this.chips = chips;
+  }
+
   public void setChips(LinkedList<Chip> chips) {
     this.chips = chips;
+  }
+
+  public int getCountChips() {
+    return chips.size();
+  }
+
+  public LinkedList<Chip> getChips(){
+    return chips;
   }
 
   private void setCountPlayers(int countOfPlayers) {
@@ -54,8 +66,8 @@ public class Market {
     }
   }
 
-  public int getCountChips() {
-    return chips.size();
+  public void removeChip(Chip chip) {
+    chips.remove(chip);
   }
 
   public static final class EmptyMarketException extends RuntimeException {

@@ -1,17 +1,17 @@
-package ru.vsu.dominoes.model;
+package ru.vsu.dominoes.model.game;
 
+import ru.vsu.dominoes.model.Board;
+import ru.vsu.dominoes.model.Chip;
 import ru.vsu.dominoes.model.enums.Moves;
-import ru.vsu.dominoes.model.players.AIPlayer;
-import ru.vsu.dominoes.model.players.HumanPlayer;
 import ru.vsu.dominoes.model.players.Player;
 import ru.vsu.dominoes.ui.GameUI;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game {
-  private final Board board;
-  private final GameUI gameUI;
+public abstract class Game {
+  protected final Board board;
+  protected final GameUI gameUI;
 
   public Game(Board board, GameUI gameUI) {
     this.board = board;
@@ -96,29 +96,5 @@ public class Game {
     return move;
   }
 
-  public void play() {
-    int countPlayers = board.getPlayers().length;
-    Player player;
-    int i = 0;
-
-    do {
-      player = board.getPlayers()[i];
-      List<Chip> playableChips = player.getAvailableChips();
-
-      gameUI.printBoard(player);
-
-      Moves move = chooseMove(playableChips.size() > 0);
-      if (player instanceof HumanPlayer) {
-        gameUI.makeMoveHuman((HumanPlayer) player, playableChips, move);
-      } else {
-        gameUI.makeMoveAI((AIPlayer) player, playableChips, move);
-      }
-
-      if (++i > countPlayers - 1) {
-        i = 0;
-      }
-    } while (!isEnd() && !isPlayerEmpty(player));
-
-    gameUI.printResults(getWinners(), player, countPlayers, isEnd());
-  }
+  public abstract void play();
 }

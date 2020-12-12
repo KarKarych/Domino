@@ -13,6 +13,11 @@ public class Chip {
     this.number2 = number2;
   }
 
+  public Chip(Chip chip) {
+    this.number1 = chip.number1;
+    this.number2 = chip.number2;
+  }
+
   public int getNumber1() {
     return number1;
   }
@@ -74,8 +79,8 @@ public class Chip {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Chip chip = (Chip) o;
-    return number1 == chip.number1 &&
-            number2 == chip.number2;
+    return number1 == chip.number1 && number2 == chip.number2 ||
+            number2 == chip.number1 && number1 == chip.number2;
   }
 
   @Override

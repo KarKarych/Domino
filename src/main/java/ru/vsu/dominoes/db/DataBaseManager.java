@@ -2,7 +2,7 @@ package ru.vsu.dominoes.db;
 
 import ru.vsu.dominoes.db.model.GameStatistic;
 import ru.vsu.dominoes.db.model.PlayerDataBase;
-import ru.vsu.dominoes.model.Game;
+import ru.vsu.dominoes.model.game.Game;
 import ru.vsu.dominoes.model.players.Player;
 
 import java.util.ArrayList;
@@ -34,7 +34,12 @@ public class DataBaseManager {
     return dataStorage.getLastGames(countGames);
   }
 
-  public List<PlayerDataBase> getPlayers(List<String> playersNames){
+  public List<PlayerDataBase> getPlayers(Player[] players){
+    List<String> playersNames = new ArrayList<>();
+    for (Player player : players) {
+      playersNames.add(player.getName());
+    }
+
     DataStorage dataStorage = new DataBaseDataStorage();
     return dataStorage.getPlayers(playersNames);
   }

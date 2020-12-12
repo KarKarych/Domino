@@ -18,7 +18,7 @@ public class ConsoleStepChooser implements StepChooser {
       do {
         try {
           System.out.print("\nWhich of the chips you can play do you want to put? [1 - " + chips.size() + "]: ");
-          i = Integer.parseInt(ConsoleUI.INPUT.nextLine()) - 1;
+          i = Integer.parseInt(ConsoleUI.INPUT.next()) - 1;
         } catch (NumberFormatException exc) {
           i = 404;
         }

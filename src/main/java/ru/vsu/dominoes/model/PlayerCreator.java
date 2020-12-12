@@ -4,6 +4,7 @@ import ru.vsu.dominoes.model.players.AIPlayer;
 import ru.vsu.dominoes.model.players.HumanPlayer;
 import ru.vsu.dominoes.model.players.Player;
 import ru.vsu.dominoes.ui.GameUI;
+import ru.vsu.dominoes.utils.GameData;
 import ru.vsu.dominoes.utils.Names;
 
 import java.util.LinkedList;
@@ -17,11 +18,11 @@ public class PlayerCreator {
     this.gameUI = gameUI;
   }
 
-  public Player[] initialisePlayers() {
-    int[] countPlayers = gameUI.getCountOfPlayersFromUser();
+  public Player[] initialisePlayersOneDevice() {
+    int[] countPlayers = gameUI.getCountOfPlayersOneDevice();
     if (countPlayers == null) return null;
 
-    String[] namesOfPlayers = gameUI.getNamesOfPlayersFromUser(countPlayers[0]);
+    String[] namesOfPlayers = gameUI.getNamesOfPlayersOneDevice(countPlayers[0]);
 
     Player[] players = new Player[countPlayers[0] + countPlayers[1]];
     List<Integer> names = new LinkedList<>();
@@ -31,7 +32,7 @@ public class PlayerCreator {
       } else {
         int index;
         do {
-          index = new Random().nextInt(Names.NAMES.length - 1);
+          index = new Random().nextInt(Names.NAMES.length);
         } while (names.contains(index));
         names.add(index);
 
@@ -40,5 +41,17 @@ public class PlayerCreator {
     }
 
     return players;
+  }
+
+  public GameData initialisePlayersLAN() {
+    GameData data = gameUI.initializeLAN();
+
+    if (data == null) return null;
+
+    Player[] players = new Player[2];
+    players[0] = new HumanPlayer(data.getNames()[0]);
+    players[1] = new HumanPlayer(data.getNames()[1]);
+
+    return new GameData(data.getPlayerType(), data.getPeer(), players);
   }
 }
