@@ -6,7 +6,7 @@ import ru.vsu.dominoes.model.game.Game;
 import ru.vsu.dominoes.model.game.GameOneDevice;
 import ru.vsu.dominoes.model.players.AIPlayer;
 import ru.vsu.dominoes.model.players.Player;
-import ru.vsu.dominoes.ui.WithoutUI;
+import ru.vsu.dominoes.ui.TestUI;
 import ru.vsu.dominoes.utils.Names;
 
 import java.util.LinkedList;
@@ -44,7 +44,7 @@ public class GameTest {
       market.handOutChips(player);
     }
 
-    game = new GameOneDevice(board, new WithoutUI(board), 1, false);
+    game = new GameOneDevice(board, new TestUI(board), 1, false);
     game.play();
   }
 

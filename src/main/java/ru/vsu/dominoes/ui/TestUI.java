@@ -18,10 +18,10 @@ import ru.vsu.dominoes.utils.GameData;
 
 import java.util.List;
 
-public class WithoutUI implements GameUI {
+public class TestUI implements GameUI {
   private final Board board;
 
-  public WithoutUI(Board board) {
+  public TestUI(Board board) {
     this.board = board;
   }
 
