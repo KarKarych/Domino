@@ -12,10 +12,31 @@ import java.util.List;
 public abstract class Game {
   protected final Board board;
   protected final GameUI gameUI;
+  protected final int numberOfStrategy;
+  protected final boolean random;
 
-  public Game(Board board, GameUI gameUI) {
+  public Game(Board board, GameUI gameUI, int strategy, boolean random) {
     this.board = board;
     this.gameUI = gameUI;
+    this.numberOfStrategy = strategy;
+    this.random = random;
+  }
+
+  public static boolean isPlayerEmpty(Player player) {
+    return player.getCountChips() != 0;
+  }
+
+  public static int calculateScore(Player player) {
+    if (player == null) return 0;
+    int score = 0;
+
+    for (int i = 0; i < player.getCountChips(); ++i) {
+      Chip chip = player.getChip(i);
+      score += chip.getNumber1();
+      score += chip.getNumber2();
+    }
+
+    return score;
   }
 
   public boolean isEnd() {
@@ -40,24 +61,7 @@ public abstract class Game {
       isTableEmpty = playWithLeft == 7 && playWithRight == 7;
     }
 
-    return isTableEmpty;
-  }
-
-  public static boolean isPlayerEmpty(Player player) {
-    return player.getCountChips() == 0;
-  }
-
-  public static int calculateScore(Player player) {
-    if (player == null) return 0;
-    int score = 0;
-
-    for (int i = 0; i < player.getCountChips(); ++i) {
-      Chip chip = player.getChip(i);
-      score += chip.getNumber1();
-      score += chip.getNumber2();
-    }
-
-    return score;
+    return !isTableEmpty;
   }
 
   public List<Player> getWinners() {

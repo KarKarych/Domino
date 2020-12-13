@@ -12,7 +12,10 @@ import ru.vsu.dominoes.model.game.Game;
 import ru.vsu.dominoes.model.players.AIPlayer;
 import ru.vsu.dominoes.model.players.HumanPlayer;
 import ru.vsu.dominoes.model.players.Player;
+import ru.vsu.dominoes.model.strategies.DownStrategy;
 import ru.vsu.dominoes.model.strategies.RandomStrategy;
+import ru.vsu.dominoes.model.strategies.Strategy;
+import ru.vsu.dominoes.model.strategies.UpStrategy;
 import ru.vsu.dominoes.p2p.Host;
 import ru.vsu.dominoes.p2p.Peer;
 import ru.vsu.dominoes.utils.GameData;
@@ -27,8 +30,10 @@ import java.util.Scanner;
 public class ConsoleUI implements GameUI {
   public static final Scanner INPUT = new Scanner(System.in);
   private Board board;
+  private boolean endOfMove;
 
-  public ConsoleUI(Board board) {
+  public ConsoleUI(Board board, boolean endOfMove) {
+    this.endOfMove = endOfMove;
     this.board = board;
   }
 
@@ -79,7 +84,9 @@ public class ConsoleUI implements GameUI {
         break;
     }
 
-    endOfMove();
+    if (endOfMove) {
+      endOfMove();
+    }
 
     return chipResult;
   }
@@ -112,12 +119,19 @@ public class ConsoleUI implements GameUI {
   }
 
   @Override
-  public void makeMoveAI(AIPlayer player, List<Chip> playableChips, Moves move) {
+  public void makeMoveAI(AIPlayer player, List<Chip> playableChips, Moves move, int numberOfStrategy) {
     System.out.println("\n" + player.getName() + " can play with:\n" + printChips(playableChips));
 
     switch (chooseMove(move)) {
       case PUT:
-        Chip chosenChip = player.putChip(new RandomStrategy(playableChips));
+        Strategy strategy = new RandomStrategy(playableChips);
+
+        switch (numberOfStrategy) {
+          case 1 -> strategy = new DownStrategy(playableChips);
+          case 2 -> strategy = new UpStrategy(playableChips);
+        }
+
+        Chip chosenChip = player.putChip(strategy);
         System.out.println(player.getName() + " put down a chip " + chosenChip + ".");
         player.addChipOnBoard(chosenChip, chosenChip.putOn(board, true));
         break;
@@ -139,7 +153,9 @@ public class ConsoleUI implements GameUI {
         break;
     }
 
-    endOfMove();
+    if (endOfMove) {
+      endOfMove();
+    }
   }
 
   private void endOfMove() {
@@ -221,49 +237,43 @@ public class ConsoleUI implements GameUI {
   }
 
   @Override
-  public void printResults(List<Player> winners, Player player, int countPlayers, boolean isEnd) {
-    int[] scores = new int[countPlayers];
+  public void printResults(List<Player> winners, Player player, int countPlayers) {
     System.out.println("\n\n* * * * * * * * * * * * THE GAME IS OVER * * * * * * * * * * * *\n" +
             "BOARD:\n");
+
     printBoard();
+
     for (int i = 0; i < countPlayers; ++i) {
-      int n = board.getPlayers()[i].getCountChips();
-      if (n > 0) {
-        System.out.println("\n" + board.getPlayers()[i].getName()
-                + " stayed with " + n
-                + " chip(s): \n" + board.getPlayers()[i]);
+      System.out.print("\n" + board.getPlayers()[i].getName()
+              + " stayed with " + board.getPlayers()[i].getCountChips() + " chip(s)");
+
+      if (board.getPlayers()[i].getCountChips() != 0) {
+        System.out.println(": \n" + board.getPlayers()[i]);
+      } else {
+        System.out.println();
       }
 
-      if (!Game.isPlayerEmpty(player) && isEnd) {
-        scores[i] = Game.calculateScore(board.getPlayers()[i]);
-        System.out.println("\n" + board.getPlayers()[i].getName());
-        System.out.println("Score: " + scores[i]);
-      }
+      System.out.println("\nScore: " + Game.calculateScore(board.getPlayers()[i]));
     }
 
-    if (Game.isPlayerEmpty(player)) {
-      System.out.println("\n" + player.getName() + " won.\n\n" +
+    System.out.println("\n");
+
+    if (winners.size() == 1) {
+      System.out.print(winners.get(0).getName() + " scored the least amount of points.\n\n" +
               "CONGRATULATIONS " + winners.get(0).getName() + ", YOU HAVE WON!!");
     } else {
-      System.out.println("\n");
-
-      if (winners.size() == 1) {
-        System.out.print(winners.get(0).getName() + " scored the least amount of points.\n\n" +
-                "CONGRATULATIONS " + winners.get(0).getName() + ", YOU HAVE WON!!");
-      } else {
-        for (int k = 0; k < winners.size(); ++k) {
-          System.out.print(winners.get(k).getName());
-          if (k == winners.size() - 2) {
-            System.out.print(" and ");
-          } else {
-            if (k < winners.size() - 2) {
-              System.out.print(", ");
-            }
+      for (int k = 0; k < winners.size(); ++k) {
+        System.out.print(winners.get(k).getName());
+        if (k == winners.size() - 2) {
+          System.out.print(" and ");
+        } else {
+          if (k < winners.size() - 2) {
+            System.out.print(", ");
           }
         }
-        System.out.println(" scored the lowest number of points.\n" +
-                "CONGRATULATIONS TO ALL WINNERS!!");
       }
+      System.out.println(" scored the lowest number of points.\n" +
+              "CONGRATULATIONS TO ALL WINNERS!!");
     }
 
     System.out.println("\n\nThank you for playing!\n");
@@ -348,15 +358,21 @@ public class ConsoleUI implements GameUI {
     return null;
   }
 
-  private Pair<String, Integer> inputIP(){
+  private Pair<String, Integer> inputIP() {
     String ip = null;
     int port = 0;
 
     try {
       System.out.println("Enter host ip and port (localhost:1000): ");
       String[] answer = INPUT.next().trim().split(":");
-      ip = answer[0];
-      port = Integer.parseInt(answer[1]);
+
+      if (answer[0].equals("this")) {
+        ip = "localhost";
+        port = 1000;
+      } else {
+        ip = answer[0];
+        port = Integer.parseInt(answer[1]);
+      }
 
       while (port < 1 || port > 65535) {
         System.out.println("The port you entered was invalid, please input another port: ");
@@ -409,7 +425,7 @@ public class ConsoleUI implements GameUI {
       if (choice == 1) {
         ServerSocket socket = new Host(ip, port).getSocket();
 
-        while (socket == null){
+        while (socket == null) {
           Pair<String, Integer> pair = inputIP();
 
           ip = pair.first;
@@ -438,11 +454,9 @@ public class ConsoleUI implements GameUI {
 
         names[1] = name;
       } else {
-        System.out.println("Connecting to host");
-
         Socket socket = new Peer(ip, port).getSocket();
 
-        while (socket == null){
+        while (socket == null) {
           Pair<String, Integer> pair = inputIP();
 
           ip = pair.first;
@@ -450,6 +464,8 @@ public class ConsoleUI implements GameUI {
 
           socket = new Peer(ip, port).getSocket();
         }
+
+        System.out.println("Connecting to host");
 
         peer = new Peer(socket);
 

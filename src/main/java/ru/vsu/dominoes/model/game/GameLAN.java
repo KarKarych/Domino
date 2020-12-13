@@ -18,8 +18,8 @@ public class GameLAN extends Game {
   private final Peer peer;
   private final PlayerType playerApp;
 
-  public GameLAN(Board board, GameUI gameUI, Peer peer, PlayerType playerApp) {
-    super(board, gameUI);
+  public GameLAN(Board board, GameUI gameUI, int strategy, boolean random, Peer peer, PlayerType playerApp) {
+    super(board, gameUI, strategy, random);
 
     this.peer = peer;
     this.playerApp = playerApp;
@@ -28,24 +28,24 @@ public class GameLAN extends Game {
   @Override
   public void play() {
     int countPlayers = board.getPlayers().length;
-    int turn;
+    int turn = 0;
 
-    if (playerApp.equals(PlayerType.HOST)) {
-      turn = new Random().nextInt(countPlayers);
-      peer.send(String.valueOf(turn));
-    } else {
-      turn = Integer.parseInt(peer.get());
+    if (random) {
+      if (playerApp.equals(PlayerType.HOST)) {
+        turn = new Random().nextInt(countPlayers);
+        peer.send(String.valueOf(turn));
+      } else {
+        turn = Integer.parseInt(peer.get());
+      }
     }
 
     PlayerType currentPlayer = PlayerType.values()[turn];
     Player player = board.getPlayers()[turn];
-
     gameUI.printFirstPlayer(player);
 
     do {
       player = board.getPlayers()[turn];
       List<Chip> playableChips = player.getAvailableChips();
-
       gameUI.printBoard(player);
 
       JsonParser jsonParser = new JsonParser();
@@ -71,8 +71,8 @@ public class GameLAN extends Game {
       }
 
       currentPlayer = currentPlayer.equals(PlayerType.HOST) ? PlayerType.PLAYER : PlayerType.HOST;
-    } while (!isEnd() && !isPlayerEmpty(player));
+    } while (isEnd() && isPlayerEmpty(player));
 
-    gameUI.printResults(getWinners(), player, countPlayers, isEnd());
+    gameUI.printResults(getWinners(), player, countPlayers);
   }
 }

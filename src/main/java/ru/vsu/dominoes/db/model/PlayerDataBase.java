@@ -2,7 +2,7 @@ package ru.vsu.dominoes.db.model;
 
 import java.util.Objects;
 
-public class PlayerDataBase {
+public class PlayerDataBase implements Comparable<PlayerDataBase> {
   private final String name;
   private Integer win;
   private Integer defeat;
@@ -63,5 +63,10 @@ public class PlayerDataBase {
   @Override
   public int hashCode() {
     return Objects.hash(name, win, defeat, id);
+  }
+
+  @Override
+  public int compareTo(PlayerDataBase playerDataBase) {
+    return playerDataBase.name.compareTo(name);
   }
 }

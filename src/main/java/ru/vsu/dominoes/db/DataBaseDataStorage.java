@@ -59,7 +59,7 @@ public class DataBaseDataStorage implements DataStorage {
 
           if (isPlayerExist(playerDataBase.getName())) {
             PreparedStatement statement = c.prepareStatement(
-                            "select player_wins, player_defeats, player_id from player where player_name = ?");
+                    "select player_wins, player_defeats, player_id from player where player_name = ?");
             statement.setString(1, playerDataBase.getName());
             ResultSet rs = statement.executeQuery();
             rs.next();

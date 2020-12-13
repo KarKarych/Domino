@@ -18,6 +18,6 @@ public class RandomStrategy implements Strategy {
       return chips.get(0);
     }
 
-    return chips.get(new Random().nextInt(chips.size() - 1));
+    return chips.get(new Random().nextInt(chips.size()));
   }
 }

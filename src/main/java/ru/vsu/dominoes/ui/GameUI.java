@@ -25,7 +25,7 @@ public interface GameUI {
 
   void printBoard(Player player);
 
-  void printResults(List<Player> winners, Player player, int countPlayers, boolean isEnd);
+  void printResults(List<Player> winners, Player player, int countPlayers);
 
   Moves chooseMove(Moves move);
 
@@ -33,7 +33,7 @@ public interface GameUI {
 
   void makeMoveOtherPlayer(HumanPlayer player, Chip chip, List<Chip> playableChips, Moves move);
 
-  void makeMoveAI(AIPlayer player, List<Chip> playableChips, Moves move);
+  void makeMoveAI(AIPlayer player, List<Chip> playableChips, Moves move, int numberOfStrategy);
 
   void printResultsOfLastGames(List<List<GameStatistic>> gameStatsList);
 

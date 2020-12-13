@@ -12,37 +12,39 @@ import java.util.List;
 import java.util.Random;
 
 public class GameOneDevice extends Game {
-  public GameOneDevice(Board board, GameUI gameUI) {
-    super(board, gameUI);
+  public GameOneDevice(Board board, GameUI gameUI, int strategy, boolean random) {
+    super(board, gameUI, strategy, random);
   }
 
   @Override
   public void play() {
     int countPlayers = board.getPlayers().length;
-    int turn = new Random().nextInt(countPlayers);
-    Player player = board.getPlayers()[turn];
+    int turn = 0;
 
+    if (random) {
+      turn = new Random().nextInt(countPlayers);
+    }
+
+    Player player = board.getPlayers()[turn];
     gameUI.printFirstPlayer(player);
 
     do {
       player = board.getPlayers()[turn];
-
       List<Chip> playableChips = player.getAvailableChips();
-
       gameUI.printBoard(player);
 
       Moves move = chooseMove(playableChips.size() > 0);
       if (player instanceof HumanPlayer) {
         gameUI.makeMoveHuman((HumanPlayer) player, playableChips, move);
       } else {
-        gameUI.makeMoveAI((AIPlayer) player, playableChips, move);
+        gameUI.makeMoveAI((AIPlayer) player, playableChips, move, numberOfStrategy);
       }
 
       if (++turn > countPlayers - 1) {
         turn = 0;
       }
-    } while (!isEnd() && !isPlayerEmpty(player));
+    } while (isEnd() && isPlayerEmpty(player));
 
-    gameUI.printResults(getWinners(), player, countPlayers, isEnd());
+    gameUI.printResults(getWinners(), player, countPlayers);
   }
 }

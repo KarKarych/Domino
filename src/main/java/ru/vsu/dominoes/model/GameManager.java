@@ -44,11 +44,10 @@ public class GameManager {
     Player[] players = gameData.getPlayers();
     JsonParser jsonParser = new JsonParser();
     Board board = new Board(players.length);
+    board.setPlayers(players);
+    Market market = board.getMarket();
 
     if (gameData.getPlayerType().equals(PlayerType.HOST)) {
-      board.setPlayers(players);
-      Market market = board.getMarket();
-
       peer.send(jsonParser.parseMarketJson(market.getChips()));
 
       for (Player player : players) {
@@ -56,9 +55,6 @@ public class GameManager {
         market.handOutChips(player);
       }
     } else {
-      board.setPlayers(players);
-      Market market = board.getMarket();
-
       market.setChips(jsonParser.parseMarketList(peer.get()));
 
       for (Player player : players) {
@@ -67,7 +63,9 @@ public class GameManager {
       }
     }
 
-    Game game = new GameLAN(board, new ConsoleUI(board), peer, gameData.getPlayerType());
+    Game game = new GameLAN(board, new ConsoleUI(board, true),
+            3, true, peer, gameData.getPlayerType());
+
     game.play();
 
     if (gameData.getPlayerType().equals(PlayerType.HOST)) {
@@ -96,7 +94,9 @@ public class GameManager {
       market.handOutChips(player);
     }
 
-    Game game = new GameOneDevice(board, new ConsoleUI(board));
+    Game game = new GameOneDevice(board, new ConsoleUI(board, true),
+            3, true);
+
     game.play();
 
     dataBaseManager.saveResults(game, board.getPlayers());
