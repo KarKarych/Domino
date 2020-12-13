@@ -6,18 +6,27 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class Peer {
-  private final Socket socket;
+  private Socket socket;
   private DataInputStream dataInputStream;
   private DataOutputStream dataOutputStream;
 
-  public Peer(Socket socket) {
-    this.socket = socket;
-
+  public Peer(String ip, int port) {
     try {
+      this.socket = new Socket(ip, port);
       this.dataInputStream = new DataInputStream(socket.getInputStream());
       this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
     } catch (IOException ioException) {
-      ioException.printStackTrace();
+      System.out.println("This address is not available for connection");
+    }
+  }
+
+  public Peer(Socket socket) {
+    try {
+      this.socket = socket;
+      this.dataInputStream = new DataInputStream(socket.getInputStream());
+      this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
+    } catch (IOException ioException) {
+      System.out.println("This address is not available for connection");
     }
   }
 
@@ -46,5 +55,9 @@ public class Peer {
     } catch (IOException ioException) {
       ioException.printStackTrace();
     }
+  }
+
+  public Socket getSocket() {
+    return socket;
   }
 }

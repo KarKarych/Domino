@@ -79,6 +79,8 @@ public class GameManager {
         printResults(players);
       }
     }
+
+    peer.closeSocket();
   }
 
   private void playOneDevice() {

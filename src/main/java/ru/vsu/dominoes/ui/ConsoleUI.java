@@ -16,8 +16,10 @@ import ru.vsu.dominoes.model.strategies.RandomStrategy;
 import ru.vsu.dominoes.p2p.Host;
 import ru.vsu.dominoes.p2p.Peer;
 import ru.vsu.dominoes.utils.GameData;
+import ru.vsu.dominoes.utils.Pair;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.Scanner;
@@ -346,6 +348,30 @@ public class ConsoleUI implements GameUI {
     return null;
   }
 
+  private Pair<String, Integer> inputIP(){
+    String ip = null;
+    int port = 0;
+
+    try {
+      System.out.println("Enter host ip and port (localhost:1000): ");
+      String[] answer = INPUT.next().trim().split(":");
+      ip = answer[0];
+      port = Integer.parseInt(answer[1]);
+
+      while (port < 1 || port > 65535) {
+        System.out.println("The port you entered was invalid, please input another port: ");
+
+        answer = INPUT.next().trim().split(":");
+        ip = answer[0];
+        port = Integer.parseInt(answer[1]);
+      }
+    } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+      System.out.println("\nA valid number was not entered.");
+    }
+
+    return new Pair<>(ip, port);
+  }
+
   @Override
   public GameData initializeLAN() {
     int choice;
@@ -364,30 +390,37 @@ public class ConsoleUI implements GameUI {
     } while (choice < 1 || choice > 2);
 
     String[] names = new String[2];
+    String ip;
+    int port;
 
     System.out.println("Enter your name: ");
     names[choice - 1] = INPUT.next().trim();
 
-    System.out.println("Enter host ip and port (localhost:1000): ");
-    String[] answer = INPUT.next().trim().split(":");
-    String ip = answer[0];
-    int port = Integer.parseInt(answer[1]);
+    do {
+      Pair<String, Integer> pair = inputIP();
 
-    while (port < 1 || port > 65535) {
-      System.out.println("The port you entered was invalid, please input another port: ");
-
-      answer = INPUT.next().trim().split(":");
-      ip = answer[0];
-      port = Integer.parseInt(answer[1]);
-    }
+      ip = pair.first;
+      port = pair.second;
+    } while (ip == null || port == 0);
 
     try {
       Peer peer;
 
       if (choice == 1) {
+        ServerSocket socket = new Host(ip, port).getSocket();
+
+        while (socket == null){
+          Pair<String, Integer> pair = inputIP();
+
+          ip = pair.first;
+          port = pair.second;
+
+          socket = new Host(ip, port).getSocket();
+        }
+
         System.out.println("Waiting for player");
 
-        peer = new Peer(new Host(ip, port).getSocket().accept());
+        peer = new Peer(socket.accept());
 
         System.out.println("Player connected");
 
@@ -407,7 +440,18 @@ public class ConsoleUI implements GameUI {
       } else {
         System.out.println("Connecting to host");
 
-        peer = new Peer(new Socket(ip, port));
+        Socket socket = new Peer(ip, port).getSocket();
+
+        while (socket == null){
+          Pair<String, Integer> pair = inputIP();
+
+          ip = pair.first;
+          port = pair.second;
+
+          socket = new Peer(ip, port).getSocket();
+        }
+
+        peer = new Peer(socket);
 
         System.out.println("Connected to host");
 

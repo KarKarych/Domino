@@ -11,7 +11,7 @@ public class Host {
     try {
       this.socket = new ServerSocket(port, 8, InetAddress.getByName(ip));
     } catch (IOException ioException) {
-      ioException.printStackTrace();
+      System.out.println("This address is not available for connection");
     }
   }
 

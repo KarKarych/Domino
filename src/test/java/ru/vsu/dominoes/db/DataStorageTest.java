@@ -11,7 +11,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//TODO Нужен тест игры/дб менеджера
 public class DataStorageTest {
   DataStorage dataStorage;
 
@@ -42,10 +41,16 @@ public class DataStorageTest {
   public void testSaveAndGetGame() {
     List<GameStatistic> gameStat = Arrays.asList(new GameStatistic("Emily", 11),
             new GameStatistic("Tom", 18));
+
+    dataStorage.savePlayers(Arrays.asList(new PlayerDataBase("Emily", 1, 0),
+            new PlayerDataBase("Tom", 0, 1)));
+
     List<GameStatistic> gameStatsSaved = dataStorage.saveGame(gameStat);
     List<GameStatistic> gameStatsReceived = dataStorage.getLastGames(1).get(0);
+
     Collections.sort(gameStatsSaved);
     Collections.sort(gameStatsReceived);
-    assertEquals(gameStatsSaved,  gameStatsReceived);
+
+    assertEquals(gameStatsSaved, gameStatsReceived);
   }
 }
