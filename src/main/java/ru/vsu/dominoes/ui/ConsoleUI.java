@@ -377,9 +377,7 @@ public class ConsoleUI implements GameUI {
       while (port < 1 || port > 65535) {
         System.out.println("The port you entered was invalid, please input another port: ");
 
-        answer = INPUT.next().trim().split(":");
-        ip = answer[0];
-        port = Integer.parseInt(answer[1]);
+        port = Integer.parseInt(INPUT.next());
       }
     } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
       System.out.println("\nA valid number was not entered.");
